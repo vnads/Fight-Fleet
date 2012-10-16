@@ -5,4 +5,4 @@ THIS IS WHERE OUR DEVELOPER INSTRUCTIONS WILL GO
 
 ===========
 
-AND HERE WE WILL PROBABLY HAVE A LINK TO THE USER MANUAL?
+<a href="https://github.com/vnads/Fight-Fleet/wiki">User Documentation</a>
