@@ -1,0 +1,41 @@
+#ignore .orig files
+*.orig
+#ignore weird Mac OSX files
+*.DS_Store
+.DS_Store
+#ignore thumbnails created by windows
+Thumbs.db
+#Ignore files build by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+*.suo
+*.user
+EngageDesign/content/js/sequence.jquery-min.js
+*.crc
+_ReSharper.engage.fanfueled.com/*
+EngageDesign/TestDesign/content/.DS_Store
+
+*.tmbundle
