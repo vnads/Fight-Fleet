@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FightFleetApi", "FightFleetApi\FightFleetApi.csproj", "{A3E73564-0BF8-4153-A2A9-E63C922EC5F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FightFleet", "FightFleet\FightFleet.csproj", "{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{A3E73564-0BF8-4153-A2A9-E63C922EC5F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3E73564-0BF8-4153-A2A9-E63C922EC5F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3E73564-0BF8-4153-A2A9-E63C922EC5F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

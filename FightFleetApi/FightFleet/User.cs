@@ -8,6 +8,17 @@ namespace FightFleet
 {
     partial class User
     {
+        public void Save()
+        {
+            using (var ctx = new FightFleetDataContext())
+            {
+                if (this.UserId == 0)
+                    ctx.Users.InsertOnSubmit(this);
+                else
+                    ctx.Users.
+            }
+        }
+
         private void HashPassword()
         {
             var provider = new SHA1CryptoServiceProvider();
