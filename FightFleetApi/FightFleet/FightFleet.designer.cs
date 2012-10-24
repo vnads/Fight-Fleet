@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FightFleet.DataAccess
+namespace FightFleet
 {
 	using System.Data.Linq;
 	using System.Data.Linq.Mapping;
@@ -23,7 +23,7 @@ namespace FightFleet.DataAccess
 	
 	
 	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="FightFleet")]
-	public partial class FightFleetDataContextDataContext : System.Data.Linq.DataContext
+	public partial class FightFleetDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
@@ -47,31 +47,31 @@ namespace FightFleet.DataAccess
     partial void DeleteUser(User instance);
     #endregion
 		
-		public FightFleetDataContextDataContext() : 
+		public FightFleetDataContext() : 
 				base(global::FightFleet.Properties.Settings.Default.FightFleetConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public FightFleetDataContextDataContext(string connection) : 
+		public FightFleetDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public FightFleetDataContextDataContext(System.Data.IDbConnection connection) : 
+		public FightFleetDataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public FightFleetDataContextDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public FightFleetDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public FightFleetDataContextDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public FightFleetDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();

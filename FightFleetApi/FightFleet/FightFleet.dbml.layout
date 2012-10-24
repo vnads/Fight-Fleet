@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="FightFleet">
+  <DataContextMoniker Name="/FightFleetDataContext" />
+  <nestedChildShapes>
+    <classShape Id="05d294de-57f2-4755-94b7-8e21a3a63005" absoluteBounds="3.5, 3.875, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/FightFleetDataContext/Board" />
+      <nestedChildShapes>
+        <elementListCompartment Id="aa7f6da7-4b18-401f-b7a1-ab14b2149782" absoluteBounds="3.515, 4.335, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="821b91de-e6da-4241-9605-1f0dd455be45" absoluteBounds="3.5, 0.75, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/FightFleetDataContext/Game" />
+      <nestedChildShapes>
+        <elementListCompartment Id="1c6dc7bf-549f-431f-8554-630394f6582a" absoluteBounds="3.515, 1.21, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="71e20396-7c34-44e2-8b94-99d526321398" absoluteBounds="0.75, 1.625, 2, 1.1939925130208333">
+      <DataClassMoniker Name="/FightFleetDataContext/GameStatus" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6ddc6884-4252-4f5f-a08b-8bab10475a78" absoluteBounds="0.765, 2.085, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="d2240f13-86bc-42ad-a8bf-e00416b01f43" absoluteBounds="6.25, 2.25, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/FightFleetDataContext/Move" />
+      <nestedChildShapes>
+        <elementListCompartment Id="09b55ccb-7942-4769-8d0a-8b30bf942643" absoluteBounds="6.265, 2.71, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" absoluteBounds="0.75, 3.875, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/FightFleetDataContext/User" />
+      <nestedChildShapes>
+        <elementListCompartment Id="06a75ccb-12ac-4a3d-b22d-73635ae0dc12" absoluteBounds="0.765, 4.335, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.5 : 2.52089680989583); (4.5 : 3.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FightFleetDataContext/Game/Game_Board" />
+      <nodes>
+        <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
+        <classShapeMoniker Id="05d294de-57f2-4755-94b7-8e21a3a63005" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 2.07294840494792); (3.04166666666667 : 2.07294840494792 : JumpStart); (3.36458333333333 : 2.07294840494792 : JumpEnd); (3.5 : 2.07294840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FightFleetDataContext/GameStatus/GameStatus_Game" />
+      <nodes>
+        <classShapeMoniker Id="71e20396-7c34-44e2-8b94-99d526321398" />
+        <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 1.4999995); (7.25 : 1.4999995); (7.25 : 2.25)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FightFleetDataContext/Game/Game_Move" />
+      <nodes>
+        <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
+        <classShapeMoniker Id="d2240f13-86bc-42ad-a8bf-e00416b01f43" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 4.66429768880208); (3.5 : 4.66429768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FightFleetDataContext/User/User_Board" />
+      <nodes>
+        <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />
+        <classShapeMoniker Id="05d294de-57f2-4755-94b7-8e21a3a63005" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 3.93207129442107); (3.28125 : 3.40082129442107); (3.28125 : 1.38022220247396); (3.5 : 1.38022220247396)]" fixedFrom="NotFixed" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FightFleetDataContext/User/User_Game" />
+      <nodes>
+        <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />
+        <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.72449961313101 : 3.875); (3.125 : 3.47449961313101); (3.125 : 1.38022220247396); (3.5 : 1.38022220247396)]" fixedFrom="NotFixed" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FightFleetDataContext/User/User_Game1" />
+      <nodes>
+        <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />
+        <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(1.70599780656551 : 3.875); (1.70599780656551 : 3.13544840494792); (3.04166666666667 : 3.13544840494792 : JumpStart); (3.36458333333333 : 3.13544840494792 : JumpEnd); (4.41666666666667 : 3.13544840494792 : JumpStart); (4.58333333333333 : 3.13544840494792 : JumpEnd); (6.25 : 3.13544840494792)]" fixedFrom="Algorithm" fixedTo="NotFixed">
+      <AssociationMoniker Name="/FightFleetDataContext/User/User_Move" />
+      <nodes>
+        <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />
+        <classShapeMoniker Id="d2240f13-86bc-42ad-a8bf-e00416b01f43" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
