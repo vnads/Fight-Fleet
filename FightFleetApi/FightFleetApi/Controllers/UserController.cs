@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FightFleet;
+using System.IO;
+using System.Web.Script.Serialization;
 
 namespace FightFleetApi.Controllers
 {
@@ -33,5 +35,24 @@ namespace FightFleetApi.Controllers
             return Json("", JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult TestPost()
+        {
+            string inputContent;
+            using (var sr = new StreamReader(Request.InputStream))
+            {
+                inputContent = sr.ReadToEnd();
+            }
+
+
+            dynamic json = new JavaScriptSerializer().DeserializeObject(inputContent);
+
+            if (json["test"] != null)
+            {
+                return Json("success", JsonRequestBehavior.AllowGet);
+            }
+
+            return Json("could not find post data", JsonRequestBehavior.AllowGet);
+        }
     }
 }
