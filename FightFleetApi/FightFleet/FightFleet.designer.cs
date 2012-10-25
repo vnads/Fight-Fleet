@@ -45,6 +45,9 @@ namespace FightFleet
     partial void InsertUser(User instance);
     partial void UpdateUser(User instance);
     partial void DeleteUser(User instance);
+    partial void InsertAuthentication(Authentication instance);
+    partial void UpdateAuthentication(Authentication instance);
+    partial void DeleteAuthentication(Authentication instance);
     #endregion
 		
 		public FightFleetDataContext() : 
@@ -114,6 +117,14 @@ namespace FightFleet
 			get
 			{
 				return this.GetTable<User>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Authentication> Authentications
+		{
+			get
+			{
+				return this.GetTable<Authentication>();
 			}
 		}
 	}
@@ -1047,6 +1058,8 @@ namespace FightFleet
 		
 		private EntitySet<Move> _Moves;
 		
+		private EntitySet<Authentication> _Authentications;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1067,6 +1080,7 @@ namespace FightFleet
 			this._Games = new EntitySet<Game>(new Action<Game>(this.attach_Games), new Action<Game>(this.detach_Games));
 			this._Games1 = new EntitySet<Game>(new Action<Game>(this.attach_Games1), new Action<Game>(this.detach_Games1));
 			this._Moves = new EntitySet<Move>(new Action<Move>(this.attach_Moves), new Action<Move>(this.detach_Moves));
+			this._Authentications = new EntitySet<Authentication>(new Action<Authentication>(this.attach_Authentications), new Action<Authentication>(this.detach_Authentications));
 			OnCreated();
 		}
 		
@@ -1202,6 +1216,19 @@ namespace FightFleet
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Authentication", Storage="_Authentications", ThisKey="UserId", OtherKey="UserId")]
+		public EntitySet<Authentication> Authentications
+		{
+			get
+			{
+				return this._Authentications;
+			}
+			set
+			{
+				this._Authentications.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1268,6 +1295,217 @@ namespace FightFleet
 		{
 			this.SendPropertyChanging();
 			entity.User = null;
+		}
+		
+		private void attach_Authentications(Authentication entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Authentications(Authentication entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Authentication")]
+	public partial class Authentication : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _AuthenticationId;
+		
+		private System.Guid _AccessToken;
+		
+		private int _UserId;
+		
+		private System.DateTime _CreatedOn;
+		
+		private System.DateTime _ExpiresOn;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnAuthenticationIdChanging(int value);
+    partial void OnAuthenticationIdChanged();
+    partial void OnAccessTokenChanging(System.Guid value);
+    partial void OnAccessTokenChanged();
+    partial void OnUserIdChanging(int value);
+    partial void OnUserIdChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnExpiresOnChanging(System.DateTime value);
+    partial void OnExpiresOnChanged();
+    #endregion
+		
+		public Authentication()
+		{
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AuthenticationId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int AuthenticationId
+		{
+			get
+			{
+				return this._AuthenticationId;
+			}
+			set
+			{
+				if ((this._AuthenticationId != value))
+				{
+					this.OnAuthenticationIdChanging(value);
+					this.SendPropertyChanging();
+					this._AuthenticationId = value;
+					this.SendPropertyChanged("AuthenticationId");
+					this.OnAuthenticationIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccessToken", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid AccessToken
+		{
+			get
+			{
+				return this._AccessToken;
+			}
+			set
+			{
+				if ((this._AccessToken != value))
+				{
+					this.OnAccessTokenChanging(value);
+					this.SendPropertyChanging();
+					this._AccessToken = value;
+					this.SendPropertyChanged("AccessToken");
+					this.OnAccessTokenChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="Int NOT NULL")]
+		public int UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+		public System.DateTime CreatedOn
+		{
+			get
+			{
+				return this._CreatedOn;
+			}
+			set
+			{
+				if ((this._CreatedOn != value))
+				{
+					this.OnCreatedOnChanging(value);
+					this.SendPropertyChanging();
+					this._CreatedOn = value;
+					this.SendPropertyChanged("CreatedOn");
+					this.OnCreatedOnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ExpiresOn", DbType="DateTime NOT NULL")]
+		public System.DateTime ExpiresOn
+		{
+			get
+			{
+				return this._ExpiresOn;
+			}
+			set
+			{
+				if ((this._ExpiresOn != value))
+				{
+					this.OnExpiresOnChanging(value);
+					this.SendPropertyChanging();
+					this._ExpiresOn = value;
+					this.SendPropertyChanged("ExpiresOn");
+					this.OnExpiresOnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Authentication", Storage="_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Authentications.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Authentications.Add(this);
+						this._UserId = value.UserId;
+					}
+					else
+					{
+						this._UserId = default(int);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

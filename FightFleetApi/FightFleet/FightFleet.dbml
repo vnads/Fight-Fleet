@@ -52,6 +52,17 @@
       <Association Name="User_Game" Member="Games" ThisKey="UserId" OtherKey="Player1Id" Type="Game" />
       <Association Name="User_Game1" Member="Games1" ThisKey="UserId" OtherKey="Player2Id" Type="Game" />
       <Association Name="User_Move" Member="Moves" ThisKey="UserId" OtherKey="UserId" Type="Move" />
+      <Association Name="User_Authentication" Member="Authentications" ThisKey="UserId" OtherKey="UserId" Type="Authentication" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Authentication" Member="Authentications">
+    <Type Name="Authentication">
+      <Column Name="AuthenticationId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AccessToken" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ExpiresOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="User_Authentication" Member="User" ThisKey="UserId" OtherKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

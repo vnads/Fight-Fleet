@@ -11,11 +11,14 @@ namespace FightFleet
         public void Save()
         {
             using (var ctx = new FightFleetDataContext())
-            {
+            {                    
                 if (this.UserId == 0)
                     ctx.Users.InsertOnSubmit(this);
                 else
-                    ctx.Users.
+                {
+                    ctx.Users.Attach(this, true);
+                    ctx.SubmitChanges();
+                }
             }
         }
 
