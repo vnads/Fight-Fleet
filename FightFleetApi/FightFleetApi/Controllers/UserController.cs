@@ -9,19 +9,19 @@ namespace FightFleetApi.Controllers
 {
     public class UserController : Controller
     {
-        [HttpPost]
+        [HttpGet]
         public JsonResult CreateUser(string userName, string password)
         {
             var user = new FightFleet.User
-            {
+            {   
                 UserName = userName,
                 Password = password
             };
 
-            return Json("", JsonRequestBehavior.AllowGet);
+            return Json(user, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult Authenticate(string userName, string password)
         {
             return Json("", JsonRequestBehavior.AllowGet);
