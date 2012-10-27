@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/textViewWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/welcome"
+        tools:context=".ConceptActivity" />
+
+    <Button
+        android:id="@+id/buttonTestPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textViewWelcome"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="49dp"
+        android:text="@string/post_button_text" />
+
+    <Button
+        android:id="@+id/buttonTestGet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonTestPost"
+        android:layout_alignBottom="@+id/buttonTestPost"
+        android:layout_toRightOf="@+id/textViewWelcome"
+        android:text="@string/get_button_text"
+        android:onClick="testGet" />
+
+    <TextView
+        android:id="@+id/textViewResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonTestPost"
+        android:layout_below="@+id/buttonTestPost"
+        android:layout_marginTop="90dp"     
+        android:text="@string/result_string" />
+    
+</RelativeLayout>

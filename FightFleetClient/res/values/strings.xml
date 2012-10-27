@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">FightFleetClient</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_concept">ConceptActivity</string>
+    <string name="welcome">Welcome to Fight Fleet</string>
+    <string name="post_button_text">Post</string>
+    <string name="get_button_text">Get</string>
+    <string name="result_string">Results will be here.</string>
+
+</resources>
