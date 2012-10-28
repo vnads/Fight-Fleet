@@ -19,7 +19,9 @@
         android:layout_below="@+id/textViewWelcome"
         android:layout_marginLeft="13dp"
         android:layout_marginTop="49dp"
-        android:text="@string/post_button_text" />
+        android:text="@string/post_button_text" 
+        android:onClick = "testPost"/>
+    
 
     <Button
         android:id="@+id/buttonTestGet"
