@@ -35,11 +35,11 @@ namespace FightFleetApi.Controllers
             return Json("", JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
+        [HttpPost]
         public JsonResult TestPost()
         {
             string inputContent;
-            using (var sr = new StreamReader(Request.InputStream))
+            using (var sr = new StreamReader(Request.InputStream, System.Text.Encoding.UTF8))
             {
                 inputContent = sr.ReadToEnd();
             }
