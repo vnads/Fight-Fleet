@@ -7,6 +7,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
+import org.json.*;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -43,8 +45,8 @@ public class ConceptActivity extends Activity {
     public void testPost(View view){
     	try{
     		PostTask postTask = new PostTask();
-    		//URL url = new URL("http://fightfleetapi.apphb.com/user/testpost");
-    		URL url = new URL("http://posttestserver.com/post.php");
+    		URL url = new URL("http://fightfleetapi.apphb.com/user/testpost");
+    		//URL url = new URL("http://posttestserver.com/post.php");
     		postTask.execute(url);
     	}
     	catch (Exception ex){
@@ -59,7 +61,7 @@ public class ConceptActivity extends Activity {
     		try
     		{
     			StringBuilder sb = new StringBuilder();
-    		    //URL createUser = new URL("http://fightfleetapi.apphb.com/user/createuser");
+    		    
     			for (int i =0; i < params.length; i++){
     				URL createUser =params[i];
     		        URLConnection yc = createUser.openConnection();
@@ -90,20 +92,19 @@ public class ConceptActivity extends Activity {
     	@Override
     	protected String doInBackground(URL... params) {
 			try {
-				StringBuilder sb = new  StringBuilder();
-			    // Construct data
-			    String data = URLEncoder.encode("test", "UTF-8") + "=" + URLEncoder.encode("value1", "UTF-8");
-			    //data += "&" + URLEncoder.encode("key2", "UTF-8") + "=" + URLEncoder.encode("value2", "UTF-8");
-
+				StringBuilder sb = new StringBuilder();
 			    // Send data
-			    for (int i = 0; i < params.length;i++){
-			    	URL url = params[i];
+			    for (int i = 0; i < params.length;i++){			    	
+					JSONObject obj = new JSONObject();
+					obj.put("test","value");
+					String data = obj.toString();
+				    // Send data
+				    URL url = params[i];
 				    URLConnection conn = url.openConnection();
 				    conn.setDoOutput(true);
 				    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 				    wr.write(data);
 				    wr.flush();
-	
 				    // Get the response
 				    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				    String line;
