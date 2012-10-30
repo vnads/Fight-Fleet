@@ -7,5 +7,7 @@
     <string name="post_button_text">Post Test</string>
     <string name="get_button_text">Get</string>
     <string name="result_string">Results will be here.</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
