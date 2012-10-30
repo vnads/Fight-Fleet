@@ -26,7 +26,7 @@ namespace FightFleet
                 model.UserName = user.UserName;
                 model.UserId = user.UserId;
                 var authentication = user.Authentications.FirstOrDefault(c => c.ExpiresOn >= DateTime.Now);
-                if (authentication == null)
+                if (authentication == null )
                 {
                     authentication = new Authentication
                     {
@@ -36,6 +36,11 @@ namespace FightFleet
 
                     };
                     user.Authentications.Add(authentication);
+                    ctx.SubmitChanges();
+                }
+                else if ((DateTime.Now - authentication.ExpiresOn).TotalDays <= 1)
+                {
+                    authentication.ExpiresOn = DateTime.Now.AddDays(7);
                     ctx.SubmitChanges();
                 }
                 model.AccessToken = authentication.AccessToken;
