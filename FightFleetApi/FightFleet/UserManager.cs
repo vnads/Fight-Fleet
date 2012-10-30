@@ -25,7 +25,7 @@ namespace FightFleet
 
                 model.UserName = user.UserName;
                 model.UserId = user.UserId;
-                var authentication = user.Authentications.FirstOrDefault(c => c.ExpiresOn <= DateTime.Now);
+                var authentication = user.Authentications.FirstOrDefault(c => c.ExpiresOn >= DateTime.Now);
                 if (authentication == null)
                 {
                     authentication = new Authentication
