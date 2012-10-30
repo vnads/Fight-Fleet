@@ -51,7 +51,10 @@
     </Compile>
     <Compile Include="Game.cs" />
     <Compile Include="GameStatus.cs" />
+    <Compile Include="Managers\GameManager.cs" />
+    <Compile Include="Models\AuthenticationManager.cs" />
     <Compile Include="Models\UserAuthenticationModel.cs" />
+    <Compile Include="Models\UserGameModel.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -59,7 +62,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="UserManager.cs" />
+    <Compile Include="Managers\UserManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -81,9 +84,7 @@
       <DependentUpon>FightFleet.dbml</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Managers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
