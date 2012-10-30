@@ -52,7 +52,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameStatus.cs" />
     <Compile Include="Managers\GameManager.cs" />
-    <Compile Include="Models\AuthenticationManager.cs" />
+    <Compile Include="Managers\AuthenticationManager.cs" />
     <Compile Include="Models\UserAuthenticationModel.cs" />
     <Compile Include="Models\UserGameModel.cs" />
     <Compile Include="Move.cs" />
