@@ -19,8 +19,8 @@
       <Column Name="GameStatusId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Game_Board" Member="Boards" ThisKey="GameId" OtherKey="GameId" Type="Board" />
       <Association Name="Game_Move" Member="Moves" ThisKey="GameId" OtherKey="GameId" Type="Move" />
-      <Association Name="User_Game" Member="User" ThisKey="Player1Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
-      <Association Name="User_Game1" Member="User1" ThisKey="Player2Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
+      <Association Name="User_Game" Member="Player1" Storage="_User" ThisKey="Player1Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
+      <Association Name="User_Game1" Member="Player2" Storage="_User1" ThisKey="Player2Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Move" Member="Moves">
@@ -29,7 +29,7 @@
       <Column Name="GameId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedDate" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="Game_Move" Member="Game" ThisKey="GameId" OtherKey="GameId" Type="Game" IsForeignKey="true" />
       <Association Name="User_Move" Member="User" ThisKey="UserId" OtherKey="UserId" Type="User" IsForeignKey="true" />
     </Type>

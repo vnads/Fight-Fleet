@@ -33,9 +33,4 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 *.suo
 *.user
-EngageDesign/content/js/sequence.jquery-min.js
-*.crc
-_ReSharper.engage.fanfueled.com/*
-EngageDesign/TestDesign/content/.DS_Store
-
 *.tmbundle

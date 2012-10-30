@@ -518,7 +518,7 @@ namespace FightFleet
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Game", Storage="_User", ThisKey="Player1Id", OtherKey="UserId", IsForeignKey=true)]
-		public User User
+		public User Player1
 		{
 			get
 			{
@@ -546,13 +546,13 @@ namespace FightFleet
 					{
 						this._Player1Id = default(int);
 					}
-					this.SendPropertyChanged("User");
+					this.SendPropertyChanged("Player1");
 				}
 			}
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Game1", Storage="_User1", ThisKey="Player2Id", OtherKey="UserId", IsForeignKey=true)]
-		public User User1
+		public User Player2
 		{
 			get
 			{
@@ -580,7 +580,7 @@ namespace FightFleet
 					{
 						this._Player2Id = default(int);
 					}
-					this.SendPropertyChanged("User1");
+					this.SendPropertyChanged("Player2");
 				}
 			}
 		}
@@ -644,7 +644,7 @@ namespace FightFleet
 		
 		private int _Position;
 		
-		private int _CreatedDate;
+		private System.DateTime _CreatedDate;
 		
 		private EntityRef<Game> _Game;
 		
@@ -662,7 +662,7 @@ namespace FightFleet
     partial void OnUserIdChanged();
     partial void OnPositionChanging(int value);
     partial void OnPositionChanged();
-    partial void OnCreatedDateChanging(int value);
+    partial void OnCreatedDateChanging(System.DateTime value);
     partial void OnCreatedDateChanged();
     #endregion
 		
@@ -761,8 +761,8 @@ namespace FightFleet
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedDate", DbType="Int NOT NULL")]
-		public int CreatedDate
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedDate", DbType="DateTime NOT NULL")]
+		public System.DateTime CreatedDate
 		{
 			get
 			{
@@ -1098,25 +1098,25 @@ namespace FightFleet
 		private void attach_Games(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.User = this;
+			entity.Player1 = this;
 		}
 		
 		private void detach_Games(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.User = null;
+			entity.Player1 = null;
 		}
 		
 		private void attach_Games1(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.User1 = this;
+			entity.Player2 = this;
 		}
 		
 		private void detach_Games1(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.User1 = null;
+			entity.Player2 = null;
 		}
 		
 		private void attach_Moves(Move entity)

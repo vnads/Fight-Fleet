@@ -55,6 +55,12 @@ namespace FightFleetApi.Controllers
             return Json("", JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult TestGet()
+        {
+            return Json("GOT!", JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public JsonResult TestPost()
         {
