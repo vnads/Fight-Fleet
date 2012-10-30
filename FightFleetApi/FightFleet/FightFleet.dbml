@@ -19,16 +19,8 @@
       <Column Name="GameStatusId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Game_Board" Member="Boards" ThisKey="GameId" OtherKey="GameId" Type="Board" />
       <Association Name="Game_Move" Member="Moves" ThisKey="GameId" OtherKey="GameId" Type="Move" />
-      <Association Name="GameStatus_Game" Member="GameStatus" ThisKey="GameStatusId" OtherKey="GameStatusId" Type="GameStatus" IsForeignKey="true" />
       <Association Name="User_Game" Member="User" ThisKey="Player1Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
       <Association Name="User_Game1" Member="User1" ThisKey="Player2Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.GameStatus" Member="GameStatus">
-    <Type Name="GameStatus">
-      <Column Name="GameStatusId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Status" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="GameStatus_Game" Member="Games" ThisKey="GameStatusId" OtherKey="GameStatusId" Type="Game" />
     </Type>
   </Table>
   <Table Name="dbo.Move" Member="Moves">

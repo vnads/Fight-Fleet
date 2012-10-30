@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using FightFleet;
 using System.IO;
 using System.Web.Script.Serialization;
+using FightFleet.Exceptions;
+using UserManager = FightFleet.UserManager;
 
 namespace FightFleetApi.Controllers
 {
@@ -20,13 +22,31 @@ namespace FightFleetApi.Controllers
                 Password = password
             };
 
+            try
+            {
+                new UserManager().SaveUser(user);
+                return Authenticate(userName, password);
+            }
+            catch (UserNameExistsException)
+            {
+                return Json("username not unique", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json("error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
             return Json(user, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
         public JsonResult Authenticate(string userName, string password)
         {
-            return Json("", JsonRequestBehavior.AllowGet);
+            var model = new UserManager().Authenticate(userName, password);
+            if(string.IsNullOrEmpty(model.UserName))
+                return Json("invalid credentials", JsonRequestBehavior.AllowGet);
+
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

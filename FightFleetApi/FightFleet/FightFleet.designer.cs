@@ -36,9 +36,6 @@ namespace FightFleet
     partial void InsertGame(Game instance);
     partial void UpdateGame(Game instance);
     partial void DeleteGame(Game instance);
-    partial void InsertGameStatus(GameStatus instance);
-    partial void UpdateGameStatus(GameStatus instance);
-    partial void DeleteGameStatus(GameStatus instance);
     partial void InsertMove(Move instance);
     partial void UpdateMove(Move instance);
     partial void DeleteMove(Move instance);
@@ -93,14 +90,6 @@ namespace FightFleet
 			get
 			{
 				return this.GetTable<Game>();
-			}
-		}
-		
-		public System.Data.Linq.Table<GameStatus> GameStatus
-		{
-			get
-			{
-				return this.GetTable<GameStatus>();
 			}
 		}
 		
@@ -365,8 +354,6 @@ namespace FightFleet
 		
 		private EntitySet<Move> _Moves;
 		
-		private EntityRef<GameStatus> _GameStatus;
-		
 		private EntityRef<User> _User;
 		
 		private EntityRef<User> _User1;
@@ -391,7 +378,6 @@ namespace FightFleet
 		{
 			this._Boards = new EntitySet<Board>(new Action<Board>(this.attach_Boards), new Action<Board>(this.detach_Boards));
 			this._Moves = new EntitySet<Move>(new Action<Move>(this.attach_Moves), new Action<Move>(this.detach_Moves));
-			this._GameStatus = default(EntityRef<GameStatus>);
 			this._User = default(EntityRef<User>);
 			this._User1 = default(EntityRef<User>);
 			OnCreated();
@@ -496,10 +482,6 @@ namespace FightFleet
 			{
 				if ((this._GameStatusId != value))
 				{
-					if (this._GameStatus.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OnGameStatusIdChanging(value);
 					this.SendPropertyChanging();
 					this._GameStatusId = value;
@@ -532,40 +514,6 @@ namespace FightFleet
 			set
 			{
 				this._Moves.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="GameStatus_Game", Storage="_GameStatus", ThisKey="GameStatusId", OtherKey="GameStatusId", IsForeignKey=true)]
-		public GameStatus GameStatus
-		{
-			get
-			{
-				return this._GameStatus.Entity;
-			}
-			set
-			{
-				GameStatus previousValue = this._GameStatus.Entity;
-				if (((previousValue != value) 
-							|| (this._GameStatus.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._GameStatus.Entity = null;
-						previousValue.Games.Remove(this);
-					}
-					this._GameStatus.Entity = value;
-					if ((value != null))
-					{
-						value.Games.Add(this);
-						this._GameStatusId = value.GameStatusId;
-					}
-					else
-					{
-						this._GameStatusId = default(int);
-					}
-					this.SendPropertyChanged("GameStatus");
-				}
 			}
 		}
 		
@@ -679,120 +627,6 @@ namespace FightFleet
 		{
 			this.SendPropertyChanging();
 			entity.Game = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.GameStatus")]
-	public partial class GameStatus : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _GameStatusId;
-		
-		private string _Status;
-		
-		private EntitySet<Game> _Games;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnGameStatusIdChanging(int value);
-    partial void OnGameStatusIdChanged();
-    partial void OnStatusChanging(string value);
-    partial void OnStatusChanged();
-    #endregion
-		
-		public GameStatus()
-		{
-			this._Games = new EntitySet<Game>(new Action<Game>(this.attach_Games), new Action<Game>(this.detach_Games));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GameStatusId", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int GameStatusId
-		{
-			get
-			{
-				return this._GameStatusId;
-			}
-			set
-			{
-				if ((this._GameStatusId != value))
-				{
-					this.OnGameStatusIdChanging(value);
-					this.SendPropertyChanging();
-					this._GameStatusId = value;
-					this.SendPropertyChanged("GameStatusId");
-					this.OnGameStatusIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string Status
-		{
-			get
-			{
-				return this._Status;
-			}
-			set
-			{
-				if ((this._Status != value))
-				{
-					this.OnStatusChanging(value);
-					this.SendPropertyChanging();
-					this._Status = value;
-					this.SendPropertyChanged("Status");
-					this.OnStatusChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="GameStatus_Game", Storage="_Games", ThisKey="GameStatusId", OtherKey="GameStatusId")]
-		public EntitySet<Game> Games
-		{
-			get
-			{
-				return this._Games;
-			}
-			set
-			{
-				this._Games.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Games(Game entity)
-		{
-			this.SendPropertyChanging();
-			entity.GameStatus = this;
-		}
-		
-		private void detach_Games(Game entity)
-		{
-			this.SendPropertyChanging();
-			entity.GameStatus = null;
 		}
 	}
 	
