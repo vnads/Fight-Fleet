@@ -71,7 +71,6 @@ namespace FightFleet
         {
             using (var ctx = new FightFleetDataContext())
             {
-
                 ctx.Users.Attach(user, true);
                 ctx.SubmitChanges();
             }
@@ -79,6 +78,7 @@ namespace FightFleet
 
         private void Create(User user)
         {
+            ValidateUser(user);
             using (var ctx = new FightFleetDataContext())
             {
                 var existingUserName = ctx.Users.FirstOrDefault(c => c.UserName.ToLower() == user.UserName.ToLower());
@@ -90,6 +90,14 @@ namespace FightFleet
                 ctx.Users.InsertOnSubmit(user);
                 ctx.SubmitChanges();
             }
+        }
+
+        private void ValidateUser(User user)
+        {
+            if (string.IsNullOrEmpty(user.UserName))
+                throw new MissingFieldException("UserName");
+            if(string.IsNullOrEmpty(user.Password))
+                throw new MissingFieldException("Password");
         }
     }
 }

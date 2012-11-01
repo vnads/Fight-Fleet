@@ -22,7 +22,7 @@ namespace FightFleet
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="FightFleet")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="db7abe2269e12c40769ab9a0f500139bf1")]
 	public partial class FightFleetDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -48,7 +48,7 @@ namespace FightFleet
     #endregion
 		
 		public FightFleetDataContext() : 
-				base(global::FightFleet.Properties.Settings.Default.FightFleetConnectionString, mappingSource)
+				base(global::FightFleet.Properties.Settings.Default.db7abe2269e12c40769ab9a0f500139bf1ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}

@@ -10,5 +10,13 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=localhost\SQLEXPRESS;Initial Catalog=FightFleet;User ID=FightFleet;Password=comp412</Value>
     </Setting>
+    <Setting Name="db7abe2269e12c40769ab9a0f500139bf1ConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=7abe2269-e12c-4076-9ab9-a0f500139bf1.sqlserver.sequelizer.com;Initial Catalog=db7abe2269e12c40769ab9a0f500139bf1;User ID=ufosakngychouvjv;Password=cJp4JzdgZZYeVhAocmUdt68SrXf42LrkcdPzvyzwiB2jGBAYLeFLetDfJEKTuino&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=7abe2269-e12c-4076-9ab9-a0f500139bf1.sqlserver.sequelizer.com;Initial Catalog=db7abe2269e12c40769ab9a0f500139bf1;User ID=ufosakngychouvjv;Password=cJp4JzdgZZYeVhAocmUdt68SrXf42LrkcdPzvyzwiB2jGBAYLeFLetDfJEKTuino</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
