@@ -33,7 +33,8 @@ namespace FightFleet.Managers
                         GameStatus = ((GameStatus)game.GameStatusId).ToString(),
                         LastMoveOn = game.LastMove == null ? "No moves yet" : game.LastMove.CreatedDate.ToShortDateString(),
                         OpponentUserName = game.Player1Id == userId ? game.Player2UserName : game.Player1UserName,
-                        OpponentUserId = game.Player1Id == userId ? game.Player2Id : game.Player1Id
+                        OpponentUserId = game.Player1Id == userId ? game.Player2Id : game.Player1Id,
+                        LastMoveBy = game.LastMove == null ? -1 : game.LastMove.UserId
                     };
             }
         }

@@ -13,6 +13,7 @@ namespace FightFleet.Models
         public string CreatedOn { get; set; }
         public string GameStatus { get; set; }
         public string LastMoveOn { get; set; }
+        public int LastMoveBy { get; set; }
     }
 
 
