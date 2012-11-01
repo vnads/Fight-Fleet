@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FightFleet.Models
+namespace FightFleet.Managers
 {
     public class AuthenticationManager
     {

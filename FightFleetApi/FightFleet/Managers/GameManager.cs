@@ -12,16 +12,29 @@ namespace FightFleet.Managers
         {
             using (var ctx = new FightFleetDataContext())
             {
-                return ctx.Games.Where(c => (c.Player1Id == userId || c.Player2Id == userId) && c.GameStatusId != (int)GameStatus.Finished)
-                    .Select(c => new UserGameModel
+                var games = ctx.Games.Where(c => (c.Player1Id == userId || c.Player2Id == userId) && c.GameStatusId != (int)GameStatus.Finished)
+                    .Select(c => new 
                     {
                         CreatedOn = c.CreatedDate.ToShortDateString(),
                         GameId = c.GameId,
-                        GameStatus = ((GameStatus) c.GameStatusId).ToString(),
-                        LastMoveOn = c.GameStatusId == (int)GameStatus.Pending ? DateTime.MinValue.ToShortDateString() : c.Moves.OrderByDescending(x => x.CreatedDate).First().CreatedDate.ToShortDateString(),
-                        OpponentUserId = c.Player1Id == userId ? c.Player2Id : c.Player1Id,
-                        OpponentUserName = c.Player1.UserId == userId ? c.Player2.UserName : c.Player1.UserName
+                        GameStatusId = c.GameStatusId,
+                        LastMove = c.Moves.OrderByDescending(x => x.CreatedDate).FirstOrDefault(),
+                        c.Player1Id,
+                        c.Player2Id,
+                        Player1UserName = c.Player1.UserName,
+                        Player2UserName = c.Player2.UserName
                     });
+
+                foreach (var game in games)
+                    yield return new UserGameModel
+                    {
+                        CreatedOn = game.CreatedOn,
+                        GameId = game.GameId,
+                        GameStatus = ((GameStatus)game.GameStatusId).ToString(),
+                        LastMoveOn = game.LastMove == null ? "No moves yet" : game.LastMove.CreatedDate.ToShortDateString(),
+                        OpponentUserName = game.Player1Id == userId ? game.Player2UserName : game.Player1UserName,
+                        OpponentUserId = game.Player1Id == userId ? game.Player2Id : game.Player1Id
+                    };
             }
         }
     }
