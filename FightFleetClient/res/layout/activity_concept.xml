@@ -22,7 +22,6 @@
         android:text="@string/post_button_text" 
         android:onClick = "testPost"/>
     
-
     <Button
         android:id="@+id/buttonTestGet"
         android:layout_width="wrap_content"
