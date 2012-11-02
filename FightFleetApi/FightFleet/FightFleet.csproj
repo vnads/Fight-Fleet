@@ -66,6 +66,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Managers\UserManager.cs" />
+    <Compile Include="RandomBoardGenerator.cs" />
+    <Compile Include="Ship.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
