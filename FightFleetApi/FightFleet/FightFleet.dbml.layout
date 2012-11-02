@@ -26,14 +26,14 @@
         <elementListCompartment Id="06a75ccb-12ac-4a3d-b22d-73635ae0dc12" absoluteBounds="0.76500000059604645, 4.33500000089407, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.5 : 4.66429768880208); (6.25 : 4.66429768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.5 : 4.66429768880208); (6.25 : 4.66429768880208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FightFleetDataContext/Game/Game_Board" />
       <nodes>
         <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
         <classShapeMoniker Id="05d294de-57f2-4755-94b7-8e21a3a63005" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.0312525 : 3.75); (5.0312525 : 2.05894653320312); (6.25 : 2.05894653320312)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4.5 : 3.75); (4.5 : 1.63544840494792); (6.25 : 1.63544840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/FightFleetDataContext/Game/Game_Move" />
       <nodes>
         <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
@@ -47,21 +47,21 @@
         <classShapeMoniker Id="05d294de-57f2-4755-94b7-8e21a3a63005" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 4.63304518882692); (3.5 : 4.63304518882692)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.75 : 4.63304518882692); (3.5 : 4.63304518882692)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FightFleetDataContext/User/User_Game" />
       <nodes>
         <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />
         <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 5.07456778321554); (3.5 : 5.07456778321554)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.75 : 5.07456778321554); (3.5 : 5.07456778321554)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FightFleetDataContext/User/User_Game1" />
       <nodes>
         <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />
         <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(1.75 : 3.875); (1.75 : 1.37322076660156); (6.25 : 1.37322076660156)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(1.75 : 3.875); (1.75 : 2.10942510742187); (4.41666666666667 : 2.10942510742187 : JumpStart); (4.58333333333333 : 2.10942510742187 : JumpEnd); (6.25 : 2.10942510742187)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/FightFleetDataContext/User/User_Move" />
       <nodes>
         <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />
@@ -74,7 +74,7 @@
         <elementListCompartment Id="ef049298-96e8-4b78-8aa0-e5f45bef7122" absoluteBounds="3.5149999999999997, 9.085, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(1.71874750002484 : 5.45359537760417); (1.71874750002484 : 9.51044840494792); (3.5 : 9.51044840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(1.71874750002484 : 5.45359537760417); (1.71874750002484 : 9.51044840494792); (3.5 : 9.51044840494792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FightFleetDataContext/User/User_Authentication" />
       <nodes>
         <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />

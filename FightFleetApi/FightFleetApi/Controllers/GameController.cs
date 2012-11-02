@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FightFleet.Managers;
 
 namespace FightFleetApi.Controllers
 {
     public class GameController : Controller
     {
+        private AuthenticationManager manager = new AuthenticationManager();
         //
         // GET: /Game/
         [HttpGet]
         public JsonResult GetGamesForUser(int userId, string accessToken)
         {
-            return Json("", JsonRequestBehavior.AllowGet);
+            if(!manager.IsValid(userId, new Guid(accessToken)))
+                return Json("Invalid Access Token", JsonRequestBehavior.AllowGet);
+            return Json(new GameManager().GetGamesForUser(userId), JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

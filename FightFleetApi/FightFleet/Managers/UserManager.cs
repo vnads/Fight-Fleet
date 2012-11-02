@@ -25,8 +25,8 @@ namespace FightFleet
 
                 model.UserName = user.UserName;
                 model.UserId = user.UserId;
-                var authentication = user.Authentications.FirstOrDefault(c => c.ExpiresOn <= DateTime.Now);
-                if (authentication == null)
+                var authentication = user.Authentications.FirstOrDefault(c => c.ExpiresOn >= DateTime.Now);
+                if (authentication == null )
                 {
                     authentication = new Authentication
                     {
@@ -36,6 +36,11 @@ namespace FightFleet
 
                     };
                     user.Authentications.Add(authentication);
+                    ctx.SubmitChanges();
+                }
+                else if ((DateTime.Now - authentication.ExpiresOn).TotalDays <= 1)
+                {
+                    authentication.ExpiresOn = DateTime.Now.AddDays(7);
                     ctx.SubmitChanges();
                 }
                 model.AccessToken = authentication.AccessToken;
@@ -66,7 +71,6 @@ namespace FightFleet
         {
             using (var ctx = new FightFleetDataContext())
             {
-
                 ctx.Users.Attach(user, true);
                 ctx.SubmitChanges();
             }
@@ -74,6 +78,7 @@ namespace FightFleet
 
         private void Create(User user)
         {
+            ValidateUser(user);
             using (var ctx = new FightFleetDataContext())
             {
                 var existingUserName = ctx.Users.FirstOrDefault(c => c.UserName.ToLower() == user.UserName.ToLower());
@@ -85,6 +90,14 @@ namespace FightFleet
                 ctx.Users.InsertOnSubmit(user);
                 ctx.SubmitChanges();
             }
+        }
+
+        private void ValidateUser(User user)
+        {
+            if (string.IsNullOrEmpty(user.UserName))
+                throw new MissingFieldException("UserName");
+            if(string.IsNullOrEmpty(user.Password))
+                throw new MissingFieldException("Password");
         }
     }
 }

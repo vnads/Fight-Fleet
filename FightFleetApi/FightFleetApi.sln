@@ -5,7 +5,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FightFleetApi", "FightFleet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FightFleet", "FightFleet\FightFleet.csproj", "{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FightFleetTest", "FightFleetTest\FightFleetTest.csproj", "{102F30A3-9310-4D7F-B10E-E844DFFFFA4E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3C4DDA7F-7988-4936-9F3C-B3189596B405}"
+	ProjectSection(SolutionItems) = preProject
+		FightFleetApi.vsmdi = FightFleetApi.vsmdi
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = FightFleetApi.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -19,6 +31,10 @@ Global
 		{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5810C33-013E-4D9B-AEC0-E5AEE5B4EE90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{102F30A3-9310-4D7F-B10E-E844DFFFFA4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{102F30A3-9310-4D7F-B10E-E844DFFFFA4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{102F30A3-9310-4D7F-B10E-E844DFFFFA4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{102F30A3-9310-4D7F-B10E-E844DFFFFA4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

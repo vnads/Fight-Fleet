@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="FightFleet" Class="FightFleetDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=localhost\SQLEXPRESS;Initial Catalog=FightFleet;User ID=FightFleet" SettingsObjectName="FightFleet.Properties.Settings" SettingsPropertyName="FightFleetConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="db7abe2269e12c40769ab9a0f500139bf1" Class="FightFleetDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=7abe2269-e12c-4076-9ab9-a0f500139bf1.sqlserver.sequelizer.com;Initial Catalog=db7abe2269e12c40769ab9a0f500139bf1;User ID=ufosakngychouvjv" SettingsObjectName="FightFleet.Properties.Settings" SettingsPropertyName="db7abe2269e12c40769ab9a0f500139bf1ConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Board" Member="Boards">
     <Type Name="Board">
       <Column Name="BoardId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -19,8 +19,8 @@
       <Column Name="GameStatusId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Game_Board" Member="Boards" ThisKey="GameId" OtherKey="GameId" Type="Board" />
       <Association Name="Game_Move" Member="Moves" ThisKey="GameId" OtherKey="GameId" Type="Move" />
-      <Association Name="User_Game" Member="User" ThisKey="Player1Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
-      <Association Name="User_Game1" Member="User1" ThisKey="Player2Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
+      <Association Name="User_Game" Member="Player1" Storage="_User" ThisKey="Player1Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
+      <Association Name="User_Game1" Member="Player2" Storage="_User1" ThisKey="Player2Id" OtherKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Move" Member="Moves">
@@ -29,7 +29,7 @@
       <Column Name="GameId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedDate" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="Game_Move" Member="Game" ThisKey="GameId" OtherKey="GameId" Type="Game" IsForeignKey="true" />
       <Association Name="User_Move" Member="User" ThisKey="UserId" OtherKey="UserId" Type="User" IsForeignKey="true" />
     </Type>

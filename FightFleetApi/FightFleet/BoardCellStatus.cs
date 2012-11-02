@@ -5,10 +5,10 @@ using System.Text;
 
 namespace FightFleet
 {
-    public enum GameStatus
+    public enum BoardCellStatus
     {
-        Pending = 1,
-        InProgress = 2,
-        Finished = 3
+        Blank,
+        Ship,
+        Hit
     }
 }

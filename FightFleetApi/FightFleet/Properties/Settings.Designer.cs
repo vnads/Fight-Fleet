@@ -33,5 +33,17 @@ namespace FightFleet.Properties {
                 return ((string)(this["FightFleetConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=7abe2269-e12c-4076-9ab9-a0f500139bf1.sqlserver.sequelizer.com;Initial" +
+            " Catalog=db7abe2269e12c40769ab9a0f500139bf1;User ID=ufosakngychouvjv;Password=cJ" +
+            "p4JzdgZZYeVhAocmUdt68SrXf42LrkcdPzvyzwiB2jGBAYLeFLetDfJEKTuino")]
+        public string db7abe2269e12c40769ab9a0f500139bf1ConnectionString {
+            get {
+                return ((string)(this["db7abe2269e12c40769ab9a0f500139bf1ConnectionString"]));
+            }
+        }
     }
 }
