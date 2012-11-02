@@ -10,32 +10,18 @@ namespace FightFleet
         public const int XSIZE = 10;
         public const int YSIZE = 10;
 
-        public CellStatus[,] BoardCells { get; set; }
+        public BoardCellStatus[,] BoardCells { get; set; }
 
         public GameBoard()
         {
-            BoardCells = new CellStatus[XSIZE, XSIZE]; 
+            BoardCells = new BoardCellStatus[XSIZE, XSIZE]; 
 
             for (int i = 0; i < XSIZE; i++) {
                 for (int j = 0; j < XSIZE; j++) {
-                    BoardCells[i, j] = CellStatus.Blank;
+                    BoardCells[i, j] = BoardCellStatus.Blank;
                 }
             }
         }
     }
     
-    public enum CellStatus
-    {
-        Blank,
-        Ship,
-        Hit
-    }
-
-    public enum ShipDirections
-    {
-        Up = 1,
-        Right = 2,
-        Down = 3,
-        Left = 4
-    }
 }

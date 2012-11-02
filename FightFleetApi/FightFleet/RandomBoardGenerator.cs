@@ -36,7 +36,7 @@ namespace FightFleet
             {
                 var randomPosition = new KeyValuePair<int, int>(random.Next(0, GameBoard.XSIZE - 1), random.Next(0, GameBoard.YSIZE - 1));
 
-                if (Board.BoardCells[randomPosition.Key, randomPosition.Value] != CellStatus.Blank) 
+                if (Board.BoardCells[randomPosition.Key, randomPosition.Value] != BoardCellStatus.Blank) 
                     continue;
 
                 var directions = (int[])Enum.GetValues(typeof (ShipDirections));
@@ -61,7 +61,7 @@ namespace FightFleet
         {
             foreach (var shipPosition in shipPositions)
             {
-                Board.BoardCells[shipPosition.Key, shipPosition.Value] = CellStatus.Ship;
+                Board.BoardCells[shipPosition.Key, shipPosition.Value] = BoardCellStatus.Ship;
             }
         }
 
@@ -87,7 +87,7 @@ namespace FightFleet
 
                     for (int i = 0; i < shipSize; i++)
                     {
-                        if (Board.BoardCells[xPos, yPos - i] != CellStatus.Blank)
+                        if (Board.BoardCells[xPos, yPos - i] != BoardCellStatus.Blank)
                         {
                             return null;
                         }
@@ -103,7 +103,7 @@ namespace FightFleet
 
                     for (int i = 0; i < shipSize; i++)
                     {
-                        if (Board.BoardCells[xPos + i, yPos] != CellStatus.Blank)
+                        if (Board.BoardCells[xPos + i, yPos] != BoardCellStatus.Blank)
                         {
                             return null;
                         } else {
@@ -116,7 +116,7 @@ namespace FightFleet
                         return null;
 
                     for (int i = 1; i < shipSize; i++) {
-                        if (Board.BoardCells[xPos, yPos + i] != CellStatus.Blank) {
+                        if (Board.BoardCells[xPos, yPos + i] != BoardCellStatus.Blank) {
                             return null;
                         } else {
                             markShipPositions.Add(new KeyValuePair<int, int>(xPos, yPos + i));
@@ -128,7 +128,7 @@ namespace FightFleet
                         return null;
 
                     for (int i = 1; i < shipSize; i++) {
-                        if (Board.BoardCells[xPos - i, yPos] != CellStatus.Blank) {
+                        if (Board.BoardCells[xPos - i, yPos] != BoardCellStatus.Blank) {
                             return null;
                         } else {
                             markShipPositions.Add(new KeyValuePair<int, int>(xPos - i, yPos));

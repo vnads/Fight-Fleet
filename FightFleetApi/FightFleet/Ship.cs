@@ -5,97 +5,84 @@ using System.Text;
 
 namespace FightFleet
 {
-  public enum ShipStatus
-  {
-    Live = 1,
-    Sunk = 2
-  }
-
-  internal abstract class Ship
-  {
-    protected Ship()
+    public enum ShipStatus
     {
-      NumberOfLives = Size;
+        Live = 1,
+        Sunk = 2
     }
 
-    public abstract string Name { get; }
-    public abstract int Size { get; }
-    public int NumberOfLives { get; set; }
-
-    public ShipStatus Status
+    public abstract class Ship
     {
-      get { return Size <= 0 ? ShipStatus.Sunk : ShipStatus.Live; }
+        protected Ship() {
+            NumberOfLives = Size;
+        }
+
+        public abstract string Name { get; }
+        public abstract int Size { get; }
+        public int NumberOfLives { get; set; }
+
+        public ShipStatus Status {
+            get { return Size <= 0 ? ShipStatus.Sunk : ShipStatus.Live; }
+        }
+
+        public ShipStatus Hit() {
+            NumberOfLives--;
+            return Status;
+        }
     }
 
-    public ShipStatus Hit()
+    internal class AircraftCarrier : Ship
     {
-      NumberOfLives--;
-      return Status;
-    }
-  }
+        public override string Name {
+            get { return "AircraftCarrier"; }
+        }
 
-  internal class AircraftCarrier : Ship
-  {
-    public override string Name
-    {
-      get { return "AircraftCarrier"; }
+        public override int Size {
+            get { return 5; }
+        }
     }
 
-    public override int Size
+    internal class BattleShip : Ship
     {
-      get { return 5; }
-    }
-  }
+        public override string Name {
+            get { return "BattleShip"; }
+        }
 
-  internal class BattleShip : Ship
-  {
-    public override string Name
-    {
-      get { return "BattleShip"; }
+        public override int Size {
+            get { return 4; }
+        }
     }
 
-    public override int Size
+    internal class Submarine : Ship
     {
-      get { return 4; }
-    }
-  }
+        public override string Name {
+            get { return "Submarine"; }
+        }
 
-  internal class Submarine : Ship
-  {
-    public override string Name
-    {
-      get { return "Submarine"; }
+        public override int Size {
+            get { return 3; }
+        }
     }
 
-    public override int Size
+    internal class Cruiser : Ship
     {
-      get { return 3; }
-    }
-  }
+        public override string Name {
+            get { return "Destroyer"; }
+        }
 
-  internal class Cruiser : Ship
-  {
-    public override string Name
-    {
-      get { return "Destroyer"; }
+        public override int Size {
+            get { return 3; }
+        }
     }
 
-    public override int Size
+    internal class Destroyer : Ship
     {
-      get { return 3; }
-    }
-  }
+        public override string Name {
+            get { return "Destroyer"; }
+        }
 
-  internal class Destroyer : Ship
-  {
-    public override string Name
-    {
-      get { return "Destroyer"; }
+        public override int Size {
+            get { return 2; }
+        }
     }
-
-    public override int Size
-    {
-      get { return 2; }
-    }
-  }
 }

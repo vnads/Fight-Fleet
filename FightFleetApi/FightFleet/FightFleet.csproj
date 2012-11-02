@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Authentication.cs" />
     <Compile Include="Board.cs" />
+    <Compile Include="BoardCellStatus.cs" />
     <Compile Include="Exceptions\UserNameExistsException.cs" />
     <Compile Include="FightFleet.designer.cs">
       <AutoGen>True</AutoGen>
@@ -68,6 +69,7 @@
     <Compile Include="Managers\UserManager.cs" />
     <Compile Include="RandomBoardGenerator.cs" />
     <Compile Include="Ship.cs" />
+    <Compile Include="ShipDirections.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
