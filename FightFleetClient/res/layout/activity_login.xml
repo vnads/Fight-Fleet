@@ -43,6 +43,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="58dp"
         android:text="@string/text_button_login"
-        android:onClick="OnSubmitLoginClick" />
+        android:onClick="onSubmitLoginClick" />
 
 </RelativeLayout>

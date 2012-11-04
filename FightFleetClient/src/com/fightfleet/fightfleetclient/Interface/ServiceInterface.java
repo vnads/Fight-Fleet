@@ -3,7 +3,8 @@ package com.fightfleet.fightfleetclient.Interface;
 import com.fightfleet.fightfleetclient.Domain.*;
 
 public interface ServiceInterface {
-	CreateUserRequest RequestCreateUser(CreateUserRequest request);
-	GameDataResponse RequestGameData(GameDataRequest request);
-	LoginResponse RequestLogin(LoginRequest request); 
+	LoginResponse requestCreateUser(CreateUserRequest request);
+	GameDataResponse requestGameData(GameDataRequest request);
+	LoginResponse requestLogin(LoginRequest request); 
+	GameListResponse requestGameList(GameListRequest request);
 }

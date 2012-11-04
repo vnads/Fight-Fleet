@@ -13,15 +13,15 @@ public class LoginResponse {
 		m_UUID = uuid;
 	}
 	
-	public UUID GetUUID(){
+	public UUID getUUID(){
 		return m_UUID;
 	}
 	
-	public Integer GetUserID(){
+	public Integer getUserID(){
 		return m_UserID;
 	}
 	
-	public String GetUserName(){
+	public String getUserName(){
 		return m_UserName;
 	}
 }

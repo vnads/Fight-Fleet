@@ -26,19 +26,24 @@ public class GameInformation {
     public Integer GetGameID(){
     	return m_GameID;
     }
-    
     public Integer GetOpponentUserID(){
     	return m_OpponentUserID;
     }
-    
-    public String OpponentUserName(){
+    public String GetOpponentUserName(){
     	return m_OpponentUserName;
     }
-    
-    public String CreatedOn(){
+    public Date GetCreatedOn(){
     	return m_CreatedOn;
     }
-   
+    public GameStatus GetGameStatus(){
+    	return m_GameStatus;
+    }
+    public Date GetLastMoveOn(){
+    	return m_LastMoveOn;
+    }
+    public Integer GetLastMoveBy(){
+    	return m_LastMoveBy;
+    }
     		
     Date ParseDate(String dateAsString){
     	try
@@ -48,6 +53,16 @@ public class GameInformation {
     	}
     	catch (Exception ex){
     		return new Date();
+    	}
+    }
+    
+    @Override
+    public String toString(){
+    	if (m_LastMoveBy == m_OpponentUserID){
+    		return m_OpponentUserName + "::: Your Turn!";
+    	}
+    	else{
+    		return m_OpponentUserName + "::: Their Turn";
     	}
     }
 }

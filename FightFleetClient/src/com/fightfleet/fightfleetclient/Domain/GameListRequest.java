@@ -11,11 +11,11 @@ public class GameListRequest {
 		m_UUID = uuid;
 	}
 	
-	public UUID GetUUID(){
+	public UUID getUUID(){
 		return m_UUID;
 	}
 	
-	public Integer GetUserID(){
+	public Integer getUserID(){
 		return m_UserID;
 	}
 }

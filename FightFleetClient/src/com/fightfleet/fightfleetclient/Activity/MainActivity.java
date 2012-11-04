@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
         return true;
     }
     
-    public void ConceptButtonClickHandler(View view) {
+    public void conceptButtonClickHandler(View view) {
     	try {
     		Intent intent = new Intent(this, ConceptActivity.class);
     		startActivity(intent);
@@ -32,5 +32,19 @@ public class MainActivity extends Activity {
     	catch (Exception ex){
     	    		
     	}
+    }
+    
+    public void loginButtonClickHandler(View view){
+    	try	{
+    		Intent intent = new Intent(this, LoginActivity.class);
+    		startActivity(intent);
+    	}
+    	catch (Exception ex){
+    		
+    	}
+    }
+    
+    public void createUserButtonClickHandler(View view){
+    	
     }
 }

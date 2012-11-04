@@ -9,10 +9,10 @@ public class CreateUserRequest {
 		m_Password = password;
 	}
 	
-	public String GetUserName(){
+	public String getUserName(){
 		return m_UserName;
 	}
-	public String GetPassword(){
+	public String getPassword(){
 		return m_Password;
 	}
 }
