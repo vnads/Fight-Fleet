@@ -43,6 +43,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fightfleet.fightfleetclient.Activity.LoginActivity" />
         </activity>
+        <activity
+            android:name=".Activity.GameActivity"
+            android:label="@string/title_activity_game" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fightfleet.fightfleetclient.Activity.GameListActivity" />
+        </activity>
     </application>
 
 </manifest>

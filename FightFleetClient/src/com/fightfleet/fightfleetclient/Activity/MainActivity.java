@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
     
     public void conceptButtonClickHandler(View view) {
     	try {
-    		Intent intent = new Intent(this, ConceptActivity.class);
+    		Intent intent = new Intent(this, GameActivity.class);
     		startActivity(intent);
     	}
     	catch (Exception ex){

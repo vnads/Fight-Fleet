@@ -43,6 +43,8 @@ public class TestServiceInterface implements ServiceInterface {
 		boardInfo[7][5] = CellState.DamagedShip;
 		boardInfo[8][5] = CellState.Ship;
 		
+		boardInfo[2][9] = CellState.Miss;
+		
 		GameDataResponse response = new GameDataResponse(request.getGameID(), boardInfo);
 		return response;
 	}
