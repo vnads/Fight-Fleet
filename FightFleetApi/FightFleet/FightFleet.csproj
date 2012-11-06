@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Authentication.cs" />
     <Compile Include="Board.cs" />
+    <Compile Include="GameBoard.cs" />
     <Compile Include="BoardCellStatus.cs" />
     <Compile Include="Exceptions\UserNameExistsException.cs" />
     <Compile Include="FightFleet.designer.cs">
@@ -58,7 +59,7 @@
     <Compile Include="Managers\BoardManager.cs" />
     <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\AuthenticationManager.cs" />
-    <Compile Include="Models\BoardModel.cs" />
+    <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\UserAuthenticationModel.cs" />
     <Compile Include="Models\UserGameModel.cs" />
     <Compile Include="Move.cs" />

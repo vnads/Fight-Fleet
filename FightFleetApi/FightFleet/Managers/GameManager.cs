@@ -13,7 +13,7 @@ namespace FightFleet.Managers
             using (var ctx = new FightFleetDataContext())
             {
                 var games = ctx.Games.Where(c => (c.Player1Id == userId || c.Player2Id == userId) && c.GameStatusId != (int)GameStatus.Finished)
-                    .Select(c => new 
+                    .Select(c => new
                     {
                         CreatedOn = c.CreatedDate.ToShortDateString(),
                         GameId = c.GameId,
@@ -36,6 +36,68 @@ namespace FightFleet.Managers
                         OpponentUserId = game.Player1Id == userId ? game.Player2Id : game.Player1Id,
                         LastMoveBy = game.LastMove == null ? -1 : game.LastMove.UserId
                     };
+            }
+        }
+
+        public GameModel CreateGame(int userId)
+        {
+            Game game;
+            var generator = new RandomlyGenerateBoard();
+            generator.Generate();
+
+            using (var ctx = new FightFleetDataContext())
+            {
+                var pendingGame = ctx.Games.FirstOrDefault(c => c.Player1Id != userId && c.Player2Id != userId && c.GameStatusId == (int)GameStatus.Pending);
+                if (pendingGame == null)
+                {
+                    game = pendingGame;
+                    
+
+                    pendingGame.Player2Id = userId;
+                    pendingGame.GameStatusId = (int)GameStatus.InProgress;
+                    ctx.SubmitChanges();
+                }
+                else
+                {
+                    game = new Game
+                    {
+                        Player1Id = userId,
+                        GameStatusId = (int)GameStatus.Pending,
+                        CreatedDate = DateTime.Now
+                    };
+                    ctx.Games.InsertOnSubmit(game);
+                }
+                game.Boards.Add(new Board
+                    {
+                        UserId = userId,
+                        BoardData = generator.Board.ToString()
+                    });
+                ctx.SubmitChanges();
+
+                return ReturnGameModel(game.GameId, userId);
+            }
+        }
+
+        private GameModel ReturnGameModel(int gameId, int currentUserId)
+        {
+            using (var ctx = new FightFleetDataContext())
+            {
+                var game = ctx.Games.First(c => c.GameId == gameId);
+                var boards = ctx.Boards.Where(c => c.GameId == gameId);
+                var userBoard = game.Player1Id == currentUserId ? boards.First(c => c.UserId == game.Player1Id) : boards.First(c => c.UserId == game.Player2Id);
+                var opponentBoard = game.Player1Id == currentUserId ? boards.FirstOrDefault(c => c.UserId == game.Player2Id) : boards.FirstOrDefault(c => c.UserId == game.Player1Id);
+                var lastMove = ctx.Moves.OrderByDescending(c => c.CreatedDate).First(c => c.GameId == gameId);
+
+                return new GameModel
+                {
+                    CurrentPlayerId = lastMove.UserId == game.Player1Id ? game.Player2Id : game.Player1Id,
+                    GameId = gameId,
+                    GameStatus = ((GameStatus)game.GameStatusId).ToString(),
+                    OpponentBoardData = opponentBoard == null ? new int[0, 0] : opponentBoard.ToMatrix(),
+                    OpponentUserId = opponentBoard.UserId,
+                    UserBoardData = userBoard.ToMatrix(),
+                    UserId = currentUserId
+                };
             }
         }
     }
