@@ -10,15 +10,15 @@ namespace FightFleet
         public const int XSIZE = 10;
         public const int YSIZE = 10;
 
-        public BoardCellStatus[,] BoardCells { get; set; }
+        public int[,] BoardCells { get; set; }
 
         public GameBoard()
         {
-            BoardCells = new BoardCellStatus[XSIZE, XSIZE]; 
+            BoardCells = new int[XSIZE, XSIZE]; 
 
             for (int i = 0; i < XSIZE; i++) {
                 for (int j = 0; j < XSIZE; j++) {
-                    BoardCells[i, j] = BoardCellStatus.Blank;
+                    BoardCells[i, j] = (int)BoardCellStatus.Blank;
                 }
             }
         }

@@ -7,8 +7,8 @@ namespace FightFleet
 {
     public enum BoardCellStatus
     {
-        Blank,
-        Ship,
-        Hit
+        Blank = 0,
+        Ship = 1,
+        Hit = 2
     }
 }

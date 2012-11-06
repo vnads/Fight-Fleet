@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="Game.cs" />
     <Compile Include="GameStatus.cs" />
+    <Compile Include="GenerateBoard.cs" />
     <Compile Include="Managers\BoardManager.cs" />
     <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\AuthenticationManager.cs" />
