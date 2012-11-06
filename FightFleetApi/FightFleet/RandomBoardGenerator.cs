@@ -8,7 +8,7 @@ namespace FightFleet
     /// <summary>
     /// Randomly places 5 ships to a game board.
     /// </summary>
-    class RandomlyGenerateBoard : GenerateBoard
+    public class RandomlyGenerateBoard : GenerateBoard
     {
         public override void Generate() {
             // Place 5 ships on the board

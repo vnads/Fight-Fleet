@@ -22,6 +22,11 @@ namespace FightFleet
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(this.BoardCells);
+        }
     }
     
 }

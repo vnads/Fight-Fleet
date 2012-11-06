@@ -130,7 +130,7 @@ namespace FightFleet
 		
 		private int _UserId;
 		
-		private System.Xml.Linq.XElement _BoardData;
+		private string _BoardData;
 		
 		private EntityRef<Game> _Game;
 		
@@ -146,7 +146,7 @@ namespace FightFleet
     partial void OnGameIdChanged();
     partial void OnUserIdChanging(int value);
     partial void OnUserIdChanged();
-    partial void OnBoardDataChanging(System.Xml.Linq.XElement value);
+    partial void OnBoardDataChanging(string value);
     partial void OnBoardDataChanged();
     #endregion
 		
@@ -225,8 +225,8 @@ namespace FightFleet
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BoardData", DbType="Xml NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public System.Xml.Linq.XElement BoardData
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BoardData", DbType="varchar(2048) NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string BoardData
 		{
 			get
 			{

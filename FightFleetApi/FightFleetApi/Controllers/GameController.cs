@@ -34,7 +34,8 @@ namespace FightFleetApi.Controllers
 
         public JsonResult CreateGame(int userId, int opponentId, string accessToken)
         {
-            return Json("", JsonRequestBehavior.AllowGet);
+            var model = new BoardManager().CreateRandomBoard(userId);
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
     }
 }

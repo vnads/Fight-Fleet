@@ -8,6 +8,7 @@ namespace FightFleet.Models
 {
     public class BoardModel
     {
-        public XmlDocument BoardData { get; set; }
+        public int UserId { get; set; }
+        public int[,] BoardData { get; set; }
     }
 }

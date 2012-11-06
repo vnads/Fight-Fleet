@@ -33,7 +33,7 @@
         <classShapeMoniker Id="05d294de-57f2-4755-94b7-8e21a3a63005" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.5 : 3.75); (4.5 : 1.63544840494792); (6.25 : 1.63544840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4.5 : 3.75); (4.5 : 1.63544840494792); (6.25 : 1.63544840494792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FightFleetDataContext/Game/Game_Move" />
       <nodes>
         <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
@@ -61,7 +61,7 @@
         <classShapeMoniker Id="821b91de-e6da-4241-9605-1f0dd455be45" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(1.75 : 3.875); (1.75 : 2.10942510742187); (4.41666666666667 : 2.10942510742187 : JumpStart); (4.58333333333333 : 2.10942510742187 : JumpEnd); (6.25 : 2.10942510742187)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(1.75 : 3.875); (1.75 : 2.10942510742187); (4.41666666666667 : 2.10942510742187 : JumpStart); (4.58333333333333 : 2.10942510742187 : JumpEnd); (6.25 : 2.10942510742187)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FightFleetDataContext/User/User_Move" />
       <nodes>
         <classShapeMoniker Id="b3719739-3f2f-4a15-9ab7-fabac4d8ea73" />

@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace FightFleet
 {
-    internal abstract class GenerateBoard
+    public abstract class GenerateBoard
     {
-        protected GameBoard Board { get; set; }
+        public GameBoard Board { get; set; }
 
         protected GenerateBoard()
         {

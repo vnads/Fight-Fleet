@@ -8,14 +8,28 @@ namespace FightFleet.Managers
 {
     public class BoardManager
     {
-        public BoardModel CreateRandomBoard()
+        public BoardModel CreateRandomBoard(int userId)
         {
-            //generate randomized xml
+            var generator = new RandomlyGenerateBoard();
 
-            //save to database
+            using (var ctx = new FightFleetDataContext())
+            {
+                ctx.Boards.InsertOnSubmit(new Board
+                {
+                    BoardData = generator.Board.ToString(),
+                    UserId = userId
+                });
 
+                ctx.SubmitChanges();
+            }
 
-            return new BoardModel();
+            return new BoardModel
+            {
+                BoardData = generator.Board.BoardCells, 
+                UserId = userId
+            };
+
+            
         }
     }
 }
