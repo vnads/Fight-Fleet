@@ -36,7 +36,7 @@ public class LoginActivity extends Activity {
     	EditText passwordText = (EditText)this.findViewById(R.id.editTextLoginPassword);
     	
     	emailText.setText("frank.castle@gmail.com");
-    	passwordText.setTag("test");
+    	passwordText.setText("test");
     }
 
     @Override
@@ -97,7 +97,4 @@ public class LoginActivity extends Activity {
         	}
     	}
     }
-    
-      
-
 }

@@ -9,8 +9,11 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.fightfleet.fightfleetclient.R;
 import com.fightfleet.fightfleetclient.Domain.GameListRequest;
@@ -34,9 +37,7 @@ public class GameListActivity extends Activity {
         Intent intent = getIntent();
         if (intent!=null){
         	m_UserData = intent.getParcelableExtra("UserData");
-        	
         }
-        
 		GameInformationTask task = new GameInformationTask();
 		task.execute(m_UserData);
     }
@@ -80,10 +81,20 @@ public class GameListActivity extends Activity {
         		m_GameInformation = result;
             	ArrayAdapter<GameInformation> adapter = new ArrayAdapter<GameInformation>(GameListActivity.this,
             											android.R.layout.simple_list_item_1,m_GameInformation);
-            	
-            	ListView listView = (ListView)GameListActivity.this.findViewById(R.id.listViewGames);
-            	
+            	final ListView listView = (ListView)GameListActivity.this.findViewById(R.id.listViewGames);
             	listView.setAdapter(adapter);
+            	
+            	listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           
+                    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                        GameInformation gameInfo = (GameInformation)listView.getItemAtPosition(position);
+                        //String str=(String)o;//As you are using Default String Adapter
+                    	Intent intent = new Intent(GameListActivity.this, GameActivity.class);
+                		intent.putExtra("UserData", m_UserData);
+                		intent.putExtra("GameID", gameInfo.GetGameID());
+                		startActivity(intent);
+                    }
+                });
         	}
         	catch (Exception ex){
         		

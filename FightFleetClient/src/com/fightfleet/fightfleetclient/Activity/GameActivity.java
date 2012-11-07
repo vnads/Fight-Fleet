@@ -17,6 +17,7 @@ import com.fightfleet.fightfleetclient.Domain.LoginRequest;
 import com.fightfleet.fightfleetclient.Domain.LoginResponse;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.CellState;
+import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 import com.fightfleet.fightfleetclient.Test.TestServiceInterface;
 
@@ -103,21 +104,21 @@ public class GameActivity extends Activity {
 		        GameDataResponse response =  m_ServiceInterface.requestGameData(request);
 		    	return response;
 			} catch (Exception e) {
-				return new GameDataResponse(-1, null);
+				return new GameDataResponse(-1, null, null, -1, -1, GameStatus.Finished, -1);
 			}
     	}
     	
     	@Override
     	protected void onPostExecute(GameDataResponse result){
         	try	{
-	           	 String userBoard = GenerateBoardString(result.getBoardData(), true);
-	        	 String opponentBoard = GenerateBoardString(result.getBoardData(), false);
+	           	 String userBoard = GenerateBoardString(result.getUserBoardData(), true);
+	        	 String opponentBoard = GenerateBoardString(result.getOpponentBoardData(), false);
 	        	 
-	     	     View v= findViewById(R.id.textViewResult);
+	     	     View v= findViewById(R.id.textViewUserWater);
 	             TextView txtVw = (TextView)v;
 	             txtVw.setText(userBoard);
 	            
-	    	     v= findViewById(R.id.textViewUserWater);
+	    	     v= findViewById(R.id.textViewOpponentWater);
 	             txtVw = (TextView)v;
 	             txtVw.setText(opponentBoard);
         	}

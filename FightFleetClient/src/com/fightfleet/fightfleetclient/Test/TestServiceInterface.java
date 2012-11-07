@@ -45,7 +45,7 @@ public class TestServiceInterface implements ServiceInterface {
 		
 		boardInfo[2][9] = CellState.Miss;
 		
-		GameDataResponse response = new GameDataResponse(request.getGameID(), boardInfo);
+		GameDataResponse response = new GameDataResponse(request.getGameID(), boardInfo, boardInfo, 2, 1, GameStatus.InProgress, 2);
 		return response;
 	}
 
@@ -61,7 +61,9 @@ public class TestServiceInterface implements ServiceInterface {
 	public GameListResponse requestGameList(GameListRequest request) {
 		ArrayList<GameInformation> gameInfo = new ArrayList<GameInformation>();
 		GameInformation game = new GameInformation(1, 2, "Frank Castle", "11/1/2012", GameStatus.InProgress, "11/1/2012", 2);
+		GameInformation gameTwo = new GameInformation(1, 3, "Judge Dread", "11/1/2012", GameStatus.InProgress, "11/1/2012", 1);
 		gameInfo.add(game);
+		gameInfo.add(gameTwo);
 		
 		GameListResponse response = new GameListResponse(gameInfo);
 		return response;
