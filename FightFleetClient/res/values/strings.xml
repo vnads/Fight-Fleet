@@ -18,7 +18,7 @@
     <string name="title_activity_game">GameActivity</string>
 	<string name="title_opponent_board">Opponent\'s Board</string>
 	<string name="title_your_board">Your Board</string>
-	<string name="water_layout">_ _ _ _ _\n_ _ _ _ _\n_ _ _ _ _\n_ _ _ _ _\n_ _ _ _ _</string>
+	<string name="water_layout">_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _\n_ _ _ _ _ _ _ _ _ _</string>
 	<string name="x_label">Enter X Coordinate</string>
 	<string name="y_label">Enter Y Coordinate</string>
 	<string name="button_fire_text">Fire!</string>

@@ -7,4 +7,6 @@ public interface ServiceInterface {
 	GameDataResponse requestGameData(GameDataRequest request);
 	LoginResponse requestLogin(LoginRequest request); 
 	GameListResponse requestGameList(GameListRequest request);
+	MoveResponse requestMove(MoveRequest request);
+	GameDataResponse requestCreateGame(CreateGameRequest request);
 }
