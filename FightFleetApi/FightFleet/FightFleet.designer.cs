@@ -344,7 +344,7 @@ namespace FightFleet
 		
 		private int _Player1Id;
 		
-		private int _Player2Id;
+		private System.Nullable<int> _Player2Id;
 		
 		private System.DateTime _CreatedDate;
 		
@@ -366,7 +366,7 @@ namespace FightFleet
     partial void OnGameIdChanged();
     partial void OnPlayer1IdChanging(int value);
     partial void OnPlayer1IdChanged();
-    partial void OnPlayer2IdChanging(int value);
+    partial void OnPlayer2IdChanging(System.Nullable<int> value);
     partial void OnPlayer2IdChanged();
     partial void OnCreatedDateChanging(System.DateTime value);
     partial void OnCreatedDateChanged();
@@ -428,7 +428,7 @@ namespace FightFleet
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Player2Id", DbType="Int NOT NULL")]
-		public int Player2Id
+		public System.Nullable<int> Player2Id
 		{
 			get
 			{
@@ -578,7 +578,7 @@ namespace FightFleet
 					}
 					else
 					{
-						this._Player2Id = default(int);
+						this._Player2Id = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("Player2");
 				}
