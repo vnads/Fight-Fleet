@@ -33,7 +33,7 @@ namespace FightFleet.Managers
                         GameStatus = ((GameStatus)game.GameStatusId).ToString(),
                         LastMoveOn = game.LastMove == null ? "No moves yet" : game.LastMove.CreatedDate.ToShortDateString(),
                         OpponentUserName = game.Player1Id == userId ? game.Player2UserName : game.Player1UserName,
-                        OpponentUserId = game.Player1Id == userId ? game.Player2Id : game.Player1Id,
+                        OpponentUserId = game.Player1Id == userId ? (game.Player2Id ?? 0) : game.Player1Id,
                         LastMoveBy = game.LastMove == null ? -1 : game.LastMove.UserId
                     };
             }
@@ -48,7 +48,7 @@ namespace FightFleet.Managers
             using (var ctx = new FightFleetDataContext())
             {
                 var pendingGame = ctx.Games.FirstOrDefault(c => c.Player1Id != userId && c.Player2Id != userId && c.GameStatusId == (int)GameStatus.Pending);
-                if (pendingGame == null)
+                if (pendingGame != null)
                 {
                     game = pendingGame;
                     
@@ -86,15 +86,21 @@ namespace FightFleet.Managers
                 var boards = ctx.Boards.Where(c => c.GameId == gameId);
                 var userBoard = game.Player1Id == currentUserId ? boards.First(c => c.UserId == game.Player1Id) : boards.First(c => c.UserId == game.Player2Id);
                 var opponentBoard = game.Player1Id == currentUserId ? boards.FirstOrDefault(c => c.UserId == game.Player2Id) : boards.FirstOrDefault(c => c.UserId == game.Player1Id);
-                var lastMove = ctx.Moves.OrderByDescending(c => c.CreatedDate).First(c => c.GameId == gameId);
+                var lastMove = ctx.Moves.OrderByDescending(c => c.CreatedDate).FirstOrDefault(c => c.GameId == gameId);
+
+                int currentPlayerId;
+                if (lastMove == null)
+                    currentPlayerId = game.Player2Id.HasValue ? game.Player2Id.Value : game.Player1Id;
+                else
+                    currentPlayerId = game.Player1Id;
 
                 return new GameModel
                 {
-                    CurrentPlayerId = lastMove.UserId == game.Player1Id ? game.Player2Id : game.Player1Id,
+                    CurrentPlayerId = currentPlayerId,
                     GameId = gameId,
                     GameStatus = ((GameStatus)game.GameStatusId).ToString(),
                     OpponentBoardData = opponentBoard == null ? new int[0, 0] : opponentBoard.ToMatrix(),
-                    OpponentUserId = opponentBoard.UserId,
+                    OpponentUserId = opponentBoard == null ? 0 : opponentBoard.UserId,
                     UserBoardData = userBoard.ToMatrix(),
                     UserId = currentUserId
                 };

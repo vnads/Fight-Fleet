@@ -37,5 +37,11 @@ namespace FightFleetApi.Controllers
             //var model = new BoardManager().CreateRandomBoard(userId);
             return Json("", JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult TestCreateGame()
+        {
+            return Json(new GameManager().CreateGame(1).ToJson(), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

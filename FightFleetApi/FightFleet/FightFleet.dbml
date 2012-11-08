@@ -14,7 +14,7 @@
     <Type Name="Game">
       <Column Name="GameId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Player1Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Player2Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Player2Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="true" />
       <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="GameStatusId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Game_Board" Member="Boards" ThisKey="GameId" OtherKey="GameId" Type="Board" />
