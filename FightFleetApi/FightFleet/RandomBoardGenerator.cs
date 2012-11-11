@@ -26,31 +26,27 @@ namespace FightFleet
         public void RandomlyPlaceShip(Ship ship) {
             var random = new Random();
 
-            while (true) {
+            while (true)
+            {
                 var randomPosition = new KeyValuePair<int, int>(random.Next(0, GameBoard.XSIZE),
                                                                 random.Next(0, GameBoard.YSIZE));
 
-                if (Board.BoardCells[randomPosition.Key, randomPosition.Value] != (int)BoardCellStatus.Blank)
+                if (Board.BoardCells[randomPosition.Key, randomPosition.Value] != (int) BoardCellStatus.Blank)
                     continue;
 
-                var directions = (int[])Enum.GetValues(typeof(ShipDirections));
+                // try to pick a random direction 6 (can be changed) times. If not successful precede to pick another random position
+                for (int i = 0; i <= 5; i++)
+                {
+                    var randomDirection = random.Next(1, Enum.GetNames(typeof (ShipDirections)).Count() + 1);
 
-                // Randomly sort the direction array to pick a random direction of the ship
-                directions.OrderBy(x => random.Next());
+                    var shipPositions = ShipCellPositions((ShipDirections) randomDirection, randomPosition, ship.Size);
 
-                // tries all possible directions until it find an appropriate one. 
-                foreach (int direction in directions) {
-                    var shipPositions = ShipCellPositions((ShipDirections)direction, randomPosition, ship.Size);
-
-                    if (shipPositions != null) {
+                    if (shipPositions != null)
+                    {
                         MarkBoardWithShipPositions(shipPositions);
                         return;
                     }
                 }
-
-                // it it getts to this point, it means the ship has not been placed on the board. 
-                // So we try with a different random location
-                RandomlyPlaceShip(ship);
             }
         }
     }
