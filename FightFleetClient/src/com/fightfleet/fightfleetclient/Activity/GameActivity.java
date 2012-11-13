@@ -8,16 +8,19 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.fightfleet.fightfleetclient.R;
+import com.fightfleet.fightfleetclient.Activity.GameActivity.*;
 import com.fightfleet.fightfleetclient.Domain.GameDataRequest;
 import com.fightfleet.fightfleetclient.Domain.GameDataResponse;
-import com.fightfleet.fightfleetclient.Domain.LoginRequest;
-import com.fightfleet.fightfleetclient.Domain.LoginResponse;
+import com.fightfleet.fightfleetclient.Domain.MoveRequest;
+import com.fightfleet.fightfleetclient.Domain.MoveResponse;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.CellState;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
+import com.fightfleet.fightfleetclient.Lib.MoveResult;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 import com.fightfleet.fightfleetclient.Test.TestServiceInterface;
 
@@ -38,7 +41,7 @@ public class GameActivity extends Activity {
         	m_GameID = intent.getIntExtra("GameID", 1);
         }
         m_ServiceInterface = new TestServiceInterface();
-        BuildBoard();
+        buildBoard();
     }
 
     @Override
@@ -60,15 +63,89 @@ public class GameActivity extends Activity {
     
     
     public void onFireButtonClick(View view){
-    
+    	//Get the values of the text boxes.
+    	EditText txtXCord = (EditText) this.findViewById(R.id.editTextXCoordinate);
+    	EditText txtYCord = (EditText)this.findViewById(R.id.editTextYCoordinate);
+    	
+    	try{
+	    	Integer xCord = Integer.parseInt(txtXCord.getText().toString());
+	    	Integer yCord = Integer.parseInt(txtYCord.getText().toString());
+	    	
+	    	MoveRequest request = new MoveRequest(xCord, yCord, m_UserData.getUserID(), m_GameID, m_UserData.getUUID());
+	    	SendMoveTask task = new SendMoveTask();
+	    	task.execute(request);
+    	}
+    	catch (Exception ex){
+    		System.out.println("Broken on Fire Button Click");
+    	}
     }
     
-    private void BuildBoard(){
+    /**
+     * An overloaded method.
+     * This method updates the status label with whatever the game status is. 
+     * There is another method that updates the status label with a MoveResult.
+     * @param status The Game Status to update
+     * @param lastMoveBy LastMoveBy is used to determine whether or not to enable the fire button.
+     */
+    void adjustGameStatus(GameStatus status, int lastMoveBy){
+        View v= findViewById(R.id.textViewStatus);
+        TextView txtVw = (TextView)v;
+        String label = new String(); //stores the text to update the status label with
+        
+    	switch (status){
+    	case Finished:
+    		label = "Game Over!";
+    		break;
+    	case InProgress:
+    		if (lastMoveBy == m_UserData.getUserID()){
+    			label = "Awaiting Opponent Move";
+    		}
+    		else{
+    			label = "Awaiting Your Move!";
+    		}
+    		break;
+    	case Pending:
+    		label = "Waiting for Opponent.";
+    		break;
+    	}    	
+    	txtVw.setText(label);
+    }
+    
+    /**
+     * Overloaded method.
+     * This method edits the game status label after a Move has been made.
+     * @param r
+     * @param xCord
+     * @param yCord
+     */
+    void adjustGameStatus(MoveResult r, int xCord, int yCord, GameStatus gameStatus){
+        View v= findViewById(R.id.textViewStatus);
+        TextView txtVw = (TextView)v;
+        String label = new String(); //stores the text to update the status label with
+        
+        //If the game is over, set the label to game over.
+        if (gameStatus == GameStatus.Finished){
+        	label = "Game Over!";
+        }
+        else{//otherwise, draw the game result.
+		    switch (r){
+		    case Hit:
+		    	label = "Hit!";
+		    	break;
+		    case Miss:
+		    	label = "Miss!";
+		    	break;
+		    }
+        }
+        txtVw.setText(label);
+    }
+    
+    void buildBoard(){
        DrawBoardTask task = new	DrawBoardTask();
        task.execute(m_UserData);
     }
     
-    private String GenerateBoardString(CellState[][] board, Boolean isUserBoard){
+    String generateBoardString(CellState[][] board, Boolean isUserBoard){
     	StringBuilder sb = new StringBuilder();
     	for (int i =0; i < board.length; i++){
     		for (int j = 0; j< board[i].length;j++){
@@ -80,7 +157,9 @@ public class GameActivity extends Activity {
     				sb.append("_");
     				break;
     			case Ship:
-    				sb.append("X");
+    				if (isUserBoard)
+    					sb.append("X");
+    				else sb.append("_");
     				break;
     			case Miss:
     				sb.append("M");
@@ -111,8 +190,8 @@ public class GameActivity extends Activity {
     	@Override
     	protected void onPostExecute(GameDataResponse result){
         	try	{
-	           	 String userBoard = GenerateBoardString(result.getUserBoardData(), true);
-	        	 String opponentBoard = GenerateBoardString(result.getOpponentBoardData(), false);
+	           	 String userBoard = generateBoardString(result.getUserBoardData(), true);
+	        	 String opponentBoard = generateBoardString(result.getOpponentBoardData(), false);
 	        	 
 	     	     View v= findViewById(R.id.textViewUserWater);
 	             TextView txtVw = (TextView)v;
@@ -121,10 +200,43 @@ public class GameActivity extends Activity {
 	    	     v= findViewById(R.id.textViewOpponentWater);
 	             txtVw = (TextView)v;
 	             txtVw.setText(opponentBoard);
+	             
+	             
+	             adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());
         	}
         	catch (Exception ex){
         		System.out.println("Broken");
         	}
     	}
-    }
+     }
+    
+	 private class SendMoveTask extends AsyncTask<MoveRequest, Void, MoveResponse> {
+	    	@Override
+	    	protected MoveResponse doInBackground(MoveRequest... params) {
+				try {		
+					MoveRequest request = params[0];
+		
+			        MoveResponse response = m_ServiceInterface.requestMove(request);
+			    	return response;
+				} catch (Exception e) {
+					return new MoveResponse(GameStatus.Finished, MoveResult.Miss, 0, 0);
+				}
+	    	}
+	    	
+	    	@Override
+	    	protected void onPostExecute(MoveResponse result){
+	        	try	{
+	        		 int xCord = result.getXCord();
+	        		 int yCord = result.getYCord();
+	        		 
+	        		 MoveResult moveResult = result.getMoveResult();
+	        		 GameStatus gameStatus =  result.getGameStatus();
+	        		     		        	 
+	        		 adjustGameStatus(moveResult, xCord, yCord, gameStatus);
+	        	}
+	        	catch (Exception ex){
+	        		System.out.println("Broken");
+	        	}
+	    	}
+	 }
 }

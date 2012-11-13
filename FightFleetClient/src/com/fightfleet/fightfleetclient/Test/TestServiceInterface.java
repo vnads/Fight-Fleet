@@ -1,7 +1,6 @@
 package com.fightfleet.fightfleetclient.Test;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import com.fightfleet.fightfleetclient.Domain.CreateGameRequest;
 import com.fightfleet.fightfleetclient.Domain.CreateUserRequest;
@@ -14,9 +13,9 @@ import com.fightfleet.fightfleetclient.Domain.LoginResponse;
 import com.fightfleet.fightfleetclient.Domain.MoveRequest;
 import com.fightfleet.fightfleetclient.Domain.MoveResponse;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
-import com.fightfleet.fightfleetclient.Lib.CellState;
 import com.fightfleet.fightfleetclient.Lib.GameInformation;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
+import com.fightfleet.fightfleetclient.Lib.MoveResult;
 
 public class TestServiceInterface implements ServiceInterface {
 	
@@ -33,7 +32,7 @@ public class TestServiceInterface implements ServiceInterface {
 		}
 		else gi = gameInfo.get(1);
 															
-		GameDataResponse response = new GameDataResponse(gi.GetGameID(), TestStructures.TestBoard, TestStructures.TestBoard, 
+		GameDataResponse response = new GameDataResponse(gi.GetGameID(), TestStructures.TestBoard, TestStructures.TestBoard2, 
 											gi.GetOpponentUserID(),request.getUserID(), gi.GetGameStatus(), gi.GetLastMoveBy());							
 		return response;
 	}
@@ -50,8 +49,21 @@ public class TestServiceInterface implements ServiceInterface {
 	}
 
 	public MoveResponse requestMove(MoveRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer xCord = request.getXCord();
+		Integer yCord = request.getYCord();
+		
+		MoveResponse response;
+		if (xCord == 1 && yCord ==1){
+			MoveResult result = MoveResult.Hit;
+			response = new MoveResponse(GameStatus.InProgress, result, xCord, yCord);
+		}
+		else if (xCord ==2 && yCord == 2){
+			response = new MoveResponse(GameStatus.Finished , MoveResult.Hit, xCord, yCord);
+		}
+		else{
+			response = new MoveResponse(GameStatus.InProgress,  MoveResult.Miss,  xCord, yCord);
+		}
+		return response;
 	}
 
 	public GameDataResponse requestCreateGame(CreateGameRequest request) {

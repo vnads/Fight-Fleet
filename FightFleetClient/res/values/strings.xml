@@ -22,5 +22,5 @@
 	<string name="x_label">Enter X Coordinate</string>
 	<string name="y_label">Enter Y Coordinate</string>
 	<string name="button_fire_text">Fire!</string>
-	
+	<string name="gameStatusLabel">Status</string>
 </resources>

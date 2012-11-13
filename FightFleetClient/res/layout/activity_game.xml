@@ -34,7 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="31dp"
-        android:text="@string/button_fire_text" />
+        android:text="@string/button_fire_text"
+        android:onClick="onFireButtonClick" />
 
     <TextView
         android:id="@+id/textViewXLabel"
@@ -88,5 +89,14 @@
         android:layout_marginTop="18dp"
         android:text="@string/title_opponent_board"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/editTextXCoordinate"
+        android:layout_below="@+id/textViewUserWater"
+        android:text="@string/gameStatusLabel"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
