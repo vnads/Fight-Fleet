@@ -8,6 +8,12 @@ namespace FightFleet
 {
     partial class Board
     {
-        
+        public string[] BoardDataArray
+        {
+            get
+            {
+                return this.BoardData.Replace("[", "").Replace("]", "").Split(',');
+            }
+        }
     }
 }

@@ -104,8 +104,8 @@ namespace FightFleet.Managers
                 var moves = Move.GetForGame(game.GameId);
                 if (moves.Count() > 0)
                 {
-                    opponentBoard.BoardData = PopulateBoardData(opponentBoard.BoardData, moves, opponentBoard.UserId);
-                    userBoard.BoardData = PopulateBoardData(userBoard.BoardData, moves, userBoard.UserId);
+                    opponentBoard.BoardData = PopulateBoardData(opponentBoard, moves, opponentBoard.UserId);
+                    userBoard.BoardData = PopulateBoardData(userBoard, moves, userBoard.UserId);
                 }
                 
                 return new GameModel
@@ -121,23 +121,27 @@ namespace FightFleet.Managers
             }
         }
 
-        public GameModel MakeMove(int userId, int gameId, int position)
+        public MoveResultModel MakeMove(int userId, int gameId, int position)
         {
             using (var ctx = new FightFleetDataContext())
             {
                 var game = ctx.Games.First(c => c.GameId == gameId);
                 if(game.Player1Id != userId && (game.Player2Id == null || game.Player2Id != userId))
-                    return null; //throw exception
+                    return new MoveResultModel{ MoveResult = MoveResult.InvalidGame.ToString() };
 
-                var board = game.Boards.First(c => c.UserId == userId);
+                var board = game.Boards.First(c => c.UserId != userId);
 
-                var moves = ctx.Moves.OrderByDescending(c => c.CreatedDate).Where(c => c.GameId == gameId && c.UserId == userId).ToList();
+                var moves = ctx.Moves.OrderByDescending(c => c.CreatedDate).Where(c => c.GameId == gameId).ToList();
 
+                //first we check all moves to make sure it's this person's turn
                 if (moves.Count != 0 && moves.ElementAt(0).UserId == userId)
-                    return null; //throw exception, it's not this person's turn
+                    return new MoveResultModel{ MoveResult = MoveResult.NotYourTurn.ToString() };
+
+                //now we only look at their moves
+                moves = moves.Where(c => c.UserId == userId).ToList();
 
                 if (moves.Any(c => c.Position == position))
-                    return null; //throw exception
+                    return new MoveResultModel{ MoveResult = MoveResult.PositionAlreadyPlayed.ToString() };
 
                 ctx.Moves.InsertOnSubmit(new Move
                 {
@@ -147,17 +151,43 @@ namespace FightFleet.Managers
                     Position = position,
                 });
 
+
+                var boardData = PopulateBoardData(board, moves, userId);
+
+                if (boardData.IndexOf('1') < 0)
+                    game.GameStatusId = (int)GameStatus.Finished;
+
+
                 ctx.SubmitChanges();
 
-                var opposingBoard = game.Boards.First(c => c.UserId != userId);
-
-                return GetGameModel(gameId, userId);
+                return new MoveResultModel
+                {
+                    GameStatus = ((GameStatus)game.GameStatusId).ToString(),
+                    MoveResult = board.BoardDataArray[position] == "0" ? MoveResult.Miss.ToString() : MoveResult.Hit.ToString(),
+                    Xcoord = position % 10,
+                    Ycooard = position / 10
+                };
+                 
             }
         }
 
-        private string PopulateBoardData(string boardData, IEnumerable<MoveModel> moves, int userId)
+        private string PopulateBoardData(Board board, IEnumerable<Move> moves, int userId)
         {
-            var boardMatrix = boardData.Replace("[", "").Replace("]", "").Split(',');
+            var moveModels = moves.Select(c => new MoveModel
+            {
+                CreatedDate = c.CreatedDate,
+                GameId = c.GameId,
+                MoveId = c.MoveId,
+                Position = c.Position,
+                UserId = c.UserId
+            });
+
+            return PopulateBoardData(board, moveModels, userId);
+        }
+
+        private string PopulateBoardData(Board board, IEnumerable<MoveModel> moves, int userId)
+        {
+            var boardMatrix = board.BoardDataArray;
 
             string matrixStr = "";
 
