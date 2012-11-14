@@ -23,4 +23,8 @@
 	<string name="y_label">Enter Y Coordinate</string>
 	<string name="button_fire_text">Fire!</string>
 	<string name="gameStatusLabel">Status</string>
+	
+	<string name="baseApiURL">http://fightfleetapi.apphb.com</string>
+	<string name="createGameEndPoint">/Game/CreateGame</string>
+	<string name="loginEndPoint">/user/createuser</string>
 </resources>

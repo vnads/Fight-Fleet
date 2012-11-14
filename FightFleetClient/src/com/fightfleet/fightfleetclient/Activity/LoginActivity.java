@@ -74,7 +74,7 @@ public class LoginActivity extends Activity {
 			try {
 				if (params.length >0){
 					UserData d = params[0];
-					LoginRequest rq = new LoginRequest(d.getUserName(), d.getPassword());
+					LoginRequest rq = new LoginRequest(d.getUserName(), d.getPassword(), getText(R.string.loginEndPoint).toString());
 					LoginResponse response = m_ServiceInterface.requestLogin(rq);
 					return new UserData(response.getUserName(), d.getPassword(), response.getUserID(), response.getUUID());
 				}
