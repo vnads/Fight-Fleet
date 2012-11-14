@@ -26,28 +26,8 @@ namespace FightFleet
 
         public override string ToString()
         {
-            var matrix = new JsonMatrix();
-
-            for (int i = 0; i < YSIZE; i++)
-            {
-                matrix.Matrix.Add(new int[XSIZE]);
-                for (int j = 0; j < XSIZE; j++)
-                {
-                    matrix.Matrix[i][j] = this.BoardCells[i,j];
-                }
-            }
-
-            return new JavaScriptSerializer().Serialize(matrix.Matrix);
+           return new JavaScriptSerializer().Serialize(this.BoardCells);
         }
-
-        private class JsonMatrix
-        {
-            public IList<int[]> Matrix { get; set; }
-
-            public JsonMatrix()
-            {
-                Matrix = new List<int[]>();
-            }
-        }
+        
     }
 }

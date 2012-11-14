@@ -35,8 +35,6 @@ namespace FightFleetApi.Controllers
             {
                 return Json("error: " + ex.Message, JsonRequestBehavior.AllowGet);
             }
-
-            return Json(user, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

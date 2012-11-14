@@ -47,7 +47,9 @@ namespace FightFleet.Managers
 
             using (var ctx = new FightFleetDataContext())
             {
-                var pendingGame = ctx.Games.FirstOrDefault(c => c.Player1Id != userId && c.Player2Id != userId && c.GameStatusId == (int)GameStatus.Pending);
+                var pendingGame = ctx.Games.FirstOrDefault(c => c.Player1Id != userId && 
+                                                            (c.Player2Id == null || c.Player2Id != userId) && 
+                                                            c.GameStatusId == (int)GameStatus.Pending);
                 if (pendingGame != null)
                 {
                     game = pendingGame;
@@ -74,17 +76,22 @@ namespace FightFleet.Managers
                     });
                 ctx.SubmitChanges();
 
-                return ReturnGameModel(game.GameId, userId);
+                return GetGameModel(game.GameId, userId);
             }
         }
 
-        private GameModel ReturnGameModel(int gameId, int currentUserId)
+        public GameModel GetGameModel(int gameId, int currentUserId)
         {
             using (var ctx = new FightFleetDataContext())
             {
-                var game = ctx.Games.First(c => c.GameId == gameId);
+                var game = ctx.Games.FirstOrDefault(c => c.GameId == gameId);
+
+                if (game == null)
+                    return new GameModel();
+
                 var boards = ctx.Boards.Where(c => c.GameId == gameId);
                 var userBoard = game.Player1Id == currentUserId ? boards.First(c => c.UserId == game.Player1Id) : boards.First(c => c.UserId == game.Player2Id);
+                
                 var opponentBoard = game.Player1Id == currentUserId ? boards.FirstOrDefault(c => c.UserId == game.Player2Id) : boards.FirstOrDefault(c => c.UserId == game.Player1Id);
                 var lastMove = ctx.Moves.OrderByDescending(c => c.CreatedDate).FirstOrDefault(c => c.GameId == gameId);
 
@@ -94,17 +101,78 @@ namespace FightFleet.Managers
                 else
                     currentPlayerId = game.Player1Id;
 
+                var moves = Move.GetForGame(game.GameId);
+                if (moves.Count() > 0)
+                {
+                    opponentBoard.BoardData = PopulateBoardData(opponentBoard.BoardData, moves, opponentBoard.UserId);
+                    userBoard.BoardData = PopulateBoardData(userBoard.BoardData, moves, userBoard.UserId);
+                }
+                
                 return new GameModel
                 {
                     CurrentPlayerId = currentPlayerId,
                     GameId = gameId,
                     GameStatus = ((GameStatus)game.GameStatusId).ToString(),
-                    OpponentBoardData = opponentBoard == null ? new int[0, 0] : opponentBoard.ToMatrix(),
+                    OpponentBoardData = opponentBoard == null ? "" : opponentBoard.BoardData,
                     OpponentUserId = opponentBoard == null ? 0 : opponentBoard.UserId,
-                    UserBoardData = userBoard.ToMatrix(),
+                    UserBoardData = userBoard.BoardData,
                     UserId = currentUserId
                 };
             }
+        }
+
+        public GameModel MakeMove(int userId, int gameId, int position)
+        {
+            using (var ctx = new FightFleetDataContext())
+            {
+                var game = ctx.Games.First(c => c.GameId == gameId);
+                if(game.Player1Id != userId && (game.Player2Id == null || game.Player2Id != userId))
+                    return null; //throw exception
+
+                var board = game.Boards.First(c => c.UserId == userId);
+
+                var moves = ctx.Moves.OrderByDescending(c => c.CreatedDate).Where(c => c.GameId == gameId && c.UserId == userId).ToList();
+
+                if (moves.Count != 0 && moves.ElementAt(0).UserId == userId)
+                    return null; //throw exception, it's not this person's turn
+
+                if (moves.Any(c => c.Position == position))
+                    return null; //throw exception
+
+                ctx.Moves.InsertOnSubmit(new Move
+                {
+                    CreatedDate = DateTime.Now,
+                    UserId = userId,
+                    GameId = gameId,
+                    Position = position,
+                });
+
+                ctx.SubmitChanges();
+
+                var opposingBoard = game.Boards.First(c => c.UserId != userId);
+
+                return GetGameModel(gameId, userId);
+            }
+        }
+
+        private string PopulateBoardData(string boardData, IEnumerable<MoveModel> moves, int userId)
+        {
+            var boardMatrix = boardData.Replace("[", "").Replace("]", "").Split(',');
+
+            string matrixStr = "";
+
+            for (int i = 0; i < boardMatrix.Length; i++)
+            {
+                var move = moves.FirstOrDefault(c => c.Position == i && c.UserId != userId);
+
+                if (boardMatrix[i] == "0")
+                    matrixStr += (move == null ? "0" : "M");
+
+                else
+                    matrixStr += (move == null ? "1" : "H");
+            }
+
+            return matrixStr;
         }
     }
 }
