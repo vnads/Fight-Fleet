@@ -196,10 +196,10 @@ namespace FightFleet.Managers
                 var move = moves.FirstOrDefault(c => c.Position == i && c.UserId != userId);
 
                 if (boardMatrix[i] == "0")
-                    matrixStr += (move == null ? "0" : "M");
+                    matrixStr += (move == null ? "0" : "3");
 
                 else
-                    matrixStr += (move == null ? "1" : "H");
+                    matrixStr += (move == null ? "1" : "2");
             }
 
             return matrixStr;
