@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Authentication.cs" />
     <Compile Include="Board.cs" />
+    <Compile Include="CellStatus.cs" />
     <Compile Include="Extensions\MatrixHelper.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="BoardCellStatus.cs" />
