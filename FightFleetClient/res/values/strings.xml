@@ -26,5 +26,11 @@
 	
 	<string name="baseApiURL">http://fightfleetapi.apphb.com</string>
 	<string name="createGameEndPoint">/Game/CreateGame</string>
+	<string name="getGameListEndPoint">/Game/GetGamesForUser</string>
+	<string name="makeMoveEndPoint">/Game/MakeMove</string>
+	<string name="getGameEndPoint">/Game/GetGame</string>
+	
 	<string name="loginEndPoint">/user/createuser</string>
+	<string name="createUserEndPoint">/User/CreateUser</string>
+	
 </resources>

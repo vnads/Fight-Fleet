@@ -71,7 +71,8 @@ public class GameActivity extends Activity {
 	    	Integer xCord = Integer.parseInt(txtXCord.getText().toString());
 	    	Integer yCord = Integer.parseInt(txtYCord.getText().toString());
 	    	
-	    	MoveRequest request = new MoveRequest(xCord, yCord, m_UserData.getUserID(), m_GameID, m_UserData.getUUID());
+	    	MoveRequest request = new MoveRequest(xCord, yCord, m_UserData.getUserID(), m_GameID,
+	    									m_UserData.getUUID(), getText(R.string.makeMoveEndPoint).toString() );
 	    	SendMoveTask task = new SendMoveTask();
 	    	task.execute(request);
     	}
@@ -179,7 +180,7 @@ public class GameActivity extends Activity {
     	protected GameDataResponse doInBackground(UserData... params) {
 			try {		
 				UserData d = params[0];
-				GameDataRequest request = new GameDataRequest(d.getUserID(), m_GameID, d.getUUID());
+				GameDataRequest request = new GameDataRequest(d.getUserID(), m_GameID, d.getUUID(), getText(R.string.getGameEndPoint).toString());
 		        GameDataResponse response =  m_ServiceInterface.requestGameData(request);
 		    	return response;
 			} catch (Exception e) {

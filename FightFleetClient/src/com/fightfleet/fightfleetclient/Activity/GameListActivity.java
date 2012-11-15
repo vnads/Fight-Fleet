@@ -65,7 +65,7 @@ public class GameListActivity extends Activity {
 			try {
 				if (params.length >0){
 					UserData d = params[0];
-					GameListRequest rq = new GameListRequest(d.getUserID(), d.getUUID());
+					GameListRequest rq = new GameListRequest(d.getUserID(), d.getUUID(), getText(R.string.getGameListEndPoint).toString());
 					GameListResponse response = m_ServiceInterface.requestGameList(rq);
 					return response.getGameInformation();
 				}
