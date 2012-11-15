@@ -4,14 +4,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 import com.fightfleet.fightfleetclient.Interface.Request;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.CellState;
+import com.fightfleet.fightfleetclient.Lib.GameInformation;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.JSONDeserializer;
+import com.fightfleet.fightfleetclient.Lib.MoveResult;
 import com.fightfleet.fightfleetclient.Lib.URLSerializer;
 
 public class DefaultServiceInterface implements ServiceInterface {
@@ -24,7 +27,12 @@ public class DefaultServiceInterface implements ServiceInterface {
         Object userIDKey = new String("UserId");
         Object uuidKey = new String("AccessToken");
         
+        String userName = data.get(userNameKey).toString();
+        Integer userID = (Integer)data.get(userIDKey);
+        UUID uuid = UUID.fromString(data.get(uuidKey).toString());
         
+        LoginResponse response = new LoginResponse(userName, userID, uuid);
+        return response;
 	}
 
 	public GameDataResponse requestGameData(GameDataRequest request) {
@@ -37,21 +45,27 @@ public class DefaultServiceInterface implements ServiceInterface {
         Object opponentUserIdKey = new String("OpponentUserId");
         Object userBoardDataKey = new String("UserBoardData");
         Object opponentBoardDataKey = new String("OpponentBoardData");
-        Object currentPlayerIdKey = new String("CurrentPlayerId");
+        //Object currentPlayerIdKey = new String("CurrentPlayerId");
+        Object lastMoveByKey = new String("LastMoveBy");
         
         Integer gameId = (Integer)data.get(gameIdKey);
-        GameStatus gameStatus = (GameStatus)data.get(gameStatusKey);
+        GameStatus status = convertGameStatus(data.get(gameStatusKey).toString());
         Integer userId = (Integer)data.get(userIdKey);
         Integer opponentUserId = (Integer)data.get(opponentUserIdKey);
-        Integer currentPlayerId = (Integer)data.get(currentPlayerIdKey);
+        //Integer currentPlayerId = (Integer)data.get(currentPlayerIdKey);
+        Integer lastMoveBy = (Integer)data.get(lastMoveByKey);
+                
+        Integer[] rawDataUserBoard = (Integer[])data.get(userBoardDataKey);
+        Integer[] rawDataOpponentBoard = (Integer[])data.get(opponentBoardDataKey);
         
-        //TODO: need to convert the game data from int[] to CellState[][]
-	}
+        CellState[][] opponentBoardData = convertBoard(rawDataOpponentBoard);
+        CellState[][] userBoardData = convertBoard(rawDataUserBoard);
+        
+        GameDataResponse response = new GameDataResponse(gameId, opponentBoardData, userBoardData, opponentUserId, userId, status, lastMoveBy);
+        return response;
+    }
 
-	public LoginResponse requestLogin(LoginRequest request) {
-	 
-	    try{
-	
+	public LoginResponse requestLogin(LoginRequest request) {	 	
         String result = sendGet(request);
         HashMap<String, Object> data = JSONDeserializer.getData(result);
         
@@ -65,40 +79,84 @@ public class DefaultServiceInterface implements ServiceInterface {
         
         LoginResponse response = new LoginResponse(userName, userID,accessToken);
         return response;
-	    }
-	    catch (Exception ex){
-	    	System.out.println("Broken");
-	    	//TODO: add logger
-	    }
-	    return null;
 	}
 
 	public GameListResponse requestGameList(GameListRequest request) {
 		
         String result = sendGet(request);
-        HashMap<String, Object> data = JSONDeserializer.getData(result);
+        HashMap<String, Object>[] data = JSONDeserializer.getCollection(result);
+               
+        Object gameIdKey = new String("gameId");
+        Object opponentUserIdKey = new String("OpponentUserId");
+        Object opponentUserNameKey = new String("OpponentUsername");
+        Object createdOnKey = new String("CreatedOn");               
+        Object gameStatusKey = new String("AccessToken");
+        Object lastMoveOnKey = new String("LastMoveOn");        
+        Object lastMoveByKey = new String("LastMoveBy");
+                        
+        ArrayList<GameInformation> gameInfo = new ArrayList<GameInformation>();
+                        
+        for (HashMap<String, Object> element : data ){
+        	Integer gameId = (Integer)element.get(gameIdKey);
+        	Integer opponentUserId = (Integer)element.get(opponentUserIdKey);
+        	String opponentUserName = element.get(opponentUserNameKey).toString();
+        	String createdOn = element.get(createdOnKey).toString();
+        	String lastMoveOn = element.get(lastMoveOnKey).toString();
+        	GameStatus status = convertGameStatus(element.get(gameStatusKey).toString());    	        	
+        	Integer lastMoveBy = (Integer)element.get(lastMoveByKey);
+        	        	        	       
+        	GameInformation gi = new GameInformation(gameId, opponentUserId, opponentUserName, createdOn, status, lastMoveOn, lastMoveBy);
+        	gameInfo.add(gi);
+        }                    
         
-        Object userNameKey = new String("UserName");
-        Object userIDKey = new String("UserId");
-        Object uuidKey = new String("AccessToken");
-        
+        GameListResponse response = new GameListResponse(gameInfo);
+        return response;
 	}
 
 	public MoveResponse requestMove(MoveRequest request) {
 	    String result = sendGet(request);
         HashMap<String, Object> data = JSONDeserializer.getData(result);
+                
+        Object gameStatusKey = new String("GameStatus");
+        Object moveResultKey = new String("MoveResult");
+        Object xCordKey = new String("Xcoord");	
+        Object yCordKey = new String("Ycoord");
         
-        Object userNameKey = new String("UserName");
-        Object userIDKey = new String("UserId");
-        Object uuidKey = new String("AccessToken");	}
-
+        Integer xCord = (Integer)data.get(xCordKey);
+        Integer yCord = (Integer)data.get(yCordKey);
+        GameStatus status = convertGameStatus(data.get(gameStatusKey).toString());
+        MoveResult moveResult = convertMoveResult(data.get(moveResultKey).toString());
+        
+        MoveResponse response = new MoveResponse(status, moveResult, xCord, yCord);
+        return response;        
+    }
+	
 	public GameDataResponse requestCreateGame(CreateGameRequest request) {
 	    String result = sendGet(request);
         HashMap<String, Object> data = JSONDeserializer.getData(result);
+                
+        Object gameIdKey = new String("GameId");
+        Object gameStatusKey = new String("GameStatus");
+        Object userIdKey = new String("UserId");
+        Object opponentUserIdKey = new String("OpponentUserId");
+        Object userBoardDataKey = new String("UserBoardData");
+        Object opponentBoardDataKey = new String("OpponentBoardData");        
+        Object lastMoveByKey = new String("LastMoveBy");
         
-        Object userNameKey = new String("UserName");
-        Object userIDKey = new String("UserId");
-        Object uuidKey = new String("AccessToken");
+        Integer gameId = (Integer)data.get(gameIdKey);
+        GameStatus status = convertGameStatus(data.get(gameStatusKey).toString());
+        Integer userId = (Integer)data.get(userIdKey);
+        Integer opponentUserId = (Integer)data.get(opponentUserIdKey);      
+        Integer lastMoveBy = (Integer)data.get(lastMoveByKey);
+                
+        Integer[] rawDataUserBoard = (Integer[])data.get(userBoardDataKey);
+        Integer[] rawDataOpponentBoard = (Integer[])data.get(opponentBoardDataKey);
+        
+        CellState[][] opponentBoardData = convertBoard(rawDataOpponentBoard);
+        CellState[][] userBoardData = convertBoard(rawDataUserBoard);
+        
+        GameDataResponse response = new GameDataResponse(gameId, opponentBoardData, userBoardData, opponentUserId, userId, status, lastMoveBy);
+        return response;
 	}
 	
 	String sendGet(Request request){
@@ -121,7 +179,7 @@ public class DefaultServiceInterface implements ServiceInterface {
 		return sb.toString();
 	}
 	
-	CellState[][] ConvertBoard(int[] rawData){
+	CellState[][] convertBoard(Integer[] rawData){
 		CellState[][] board = new CellState[10][10];
 		int x=0;
 		int y=0;
@@ -131,7 +189,7 @@ public class DefaultServiceInterface implements ServiceInterface {
 				x = 0;
 				y= y+1;
 			}
-			CellState state;
+			
 			switch (rawData[i]){
 			case 0:
 				board[x][y]= CellState.Empty;
@@ -147,8 +205,28 @@ public class DefaultServiceInterface implements ServiceInterface {
 				break;
 			}
 		}
-		 
 		return board;
+	}
+	
+	GameStatus convertGameStatus(String str){
+		GameStatus gs = GameStatus.Finished;
+				
+		if (str == "Pending")
+			gs = GameStatus.Pending;			
+		else if (str =="InProgress")
+			gs = GameStatus.InProgress;		
+		else if (str == "Finished")
+			gs = GameStatus.Finished;					
+		return gs;
+	}
+	
+	MoveResult convertMoveResult(String str){
+		MoveResult result = MoveResult.Miss;
+	     if (str == "Hit")
+	    	result = MoveResult.Hit;
+	     else if (str == "Miss")
+	    	 result = MoveResult.Miss;		
+	    return result;
 	}
 	
 }
