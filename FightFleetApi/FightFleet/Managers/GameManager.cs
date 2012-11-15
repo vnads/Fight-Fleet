@@ -116,7 +116,8 @@ namespace FightFleet.Managers
                     OpponentBoardData = opponentBoard == null ? "" : opponentBoard.BoardData,
                     OpponentUserId = opponentBoard == null ? 0 : opponentBoard.UserId,
                     UserBoardData = userBoard.BoardData,
-                    UserId = currentUserId
+                    UserId = currentUserId,
+                    LastMoveBy =  currentPlayerId == game.Player1Id ? game.Player2Id : game.Player1Id
                 };
             }
         }
