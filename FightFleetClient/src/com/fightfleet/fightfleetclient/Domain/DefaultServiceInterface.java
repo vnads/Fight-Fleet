@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
@@ -38,13 +39,13 @@ public class DefaultServiceInterface implements ServiceInterface {
         
         HashMap<String, Object> data = JSONDeserializer.getData(sb.toString());
         
-        Object userNameKey = new String("username");
-        Object userIDKey = new String("userID");
-        Object uuidKey = new String("accestoken");
+        Object userNameKey = new String("UserName");
+        Object userIDKey = new String("UserId");
+        Object uuidKey = new String("AccessToken");
         
         String userName = data.get(userNameKey).toString();
         Integer userID = (Integer)data.get(userIDKey);
-        UUID accessToken = (UUID)data.get(uuidKey);
+        UUID accessToken = UUID.fromString(data.get(uuidKey).toString());
         
         LoginResponse response = new LoginResponse(userName, userID,accessToken);
         return response;
