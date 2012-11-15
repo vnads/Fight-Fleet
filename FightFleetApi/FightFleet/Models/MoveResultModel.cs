@@ -10,7 +10,7 @@ namespace FightFleet.Models
         public string GameStatus { get; set; }
         public string MoveResult { get; set; }
         public int Xcoord { get; set; }
-        public int Ycooard { get; set; }
+        public int Ycoord { get; set; }
     }
 
     public enum MoveResult
