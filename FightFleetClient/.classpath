@@ -4,8 +4,8 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="C:/Users/shamedi/Downloads/jackson-core-2.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/shamedi/Downloads/jackson-databind-2.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/shamedi/Downloads/jackson-annotations-2.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Source/Fight-Fleet/FightFleetClient/libs/jackson-annotations-2.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Source/Fight-Fleet/FightFleetClient/libs/jackson-core-2.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Source/Fight-Fleet/FightFleetClient/libs/jackson-databind-2.1.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
