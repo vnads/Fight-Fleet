@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.fightfleet.fightfleetclient.R;
-import com.fightfleet.fightfleetclient.Activity.GameActivity.*;
+import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
 import com.fightfleet.fightfleetclient.Domain.GameDataRequest;
 import com.fightfleet.fightfleetclient.Domain.GameDataResponse;
 import com.fightfleet.fightfleetclient.Domain.MoveRequest;
@@ -22,7 +22,6 @@ import com.fightfleet.fightfleetclient.Lib.CellState;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.MoveResult;
 import com.fightfleet.fightfleetclient.Lib.UserData;
-import com.fightfleet.fightfleetclient.Test.TestServiceInterface;
 
 public class GameActivity extends Activity {
 	UserData m_UserData;
@@ -40,7 +39,7 @@ public class GameActivity extends Activity {
         	m_UserData = intent.getParcelableExtra("UserData");	
         	m_GameID = intent.getIntExtra("GameID", 1);
         }
-        m_ServiceInterface = new TestServiceInterface();
+        m_ServiceInterface = new DefaultServiceInterface();
         buildBoard();
     }
 

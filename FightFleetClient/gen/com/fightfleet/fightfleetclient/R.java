@@ -19,7 +19,6 @@ public final class R {
     }
     public static final class id {
         public static final int btnFire=0x7f070007;
-        public static final int buttonConceptPage=0x7f070015;
         public static final int buttonCreateUser=0x7f070014;
         public static final int buttonLogin=0x7f070013;
         public static final int buttonSubmitLogin=0x7f070012;
@@ -30,7 +29,7 @@ public final class R {
         public static final int editTextXCoordinate=0x7f07000a;
         public static final int editTextYCoordinate=0x7f070009;
         public static final int listViewGames=0x7f07000e;
-        public static final int menu_settings=0x7f070016;
+        public static final int menu_settings=0x7f070015;
         public static final int textViewLoginTitle=0x7f07000f;
         public static final int textViewOpponentTitle=0x7f07000c;
         public static final int textViewOpponentWater=0x7f070006;

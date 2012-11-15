@@ -32,15 +32,5 @@
         android:layout_marginTop="36dp"
         android:text="@string/text_button_create_user"
         android:onClick="createUserButtonClickHandler" />
-       
-    <Button
-        android:id="@+id/buttonConceptPage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonCreateUser"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:text="@string/text_button_concept"
-        android:onClick="conceptButtonClickHandler" />
 
 </RelativeLayout>

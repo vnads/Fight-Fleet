@@ -1,8 +1,5 @@
 package com.fightfleet.fightfleetclient.Activity;
 
-import java.net.URL;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,17 +11,14 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.fightfleet.fightfleetclient.R;
-import com.fightfleet.fightfleetclient.Domain.GameListRequest;
-import com.fightfleet.fightfleetclient.Domain.GameListResponse;
+import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
 import com.fightfleet.fightfleetclient.Domain.LoginRequest;
 import com.fightfleet.fightfleetclient.Domain.LoginResponse;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
-import com.fightfleet.fightfleetclient.Lib.GameInformation;
 import com.fightfleet.fightfleetclient.Lib.UserData;
-import com.fightfleet.fightfleetclient.Test.TestServiceInterface;
 
 public class LoginActivity extends Activity {
-	ServiceInterface m_ServiceInterface = new TestServiceInterface();
+	ServiceInterface m_ServiceInterface = new DefaultServiceInterface();
 	UserData m_UserData;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +30,7 @@ public class LoginActivity extends Activity {
     	EditText passwordText = (EditText)this.findViewById(R.id.editTextLoginPassword);
     	
     	emailText.setText("frank.castle@gmail.com");
-    	passwordText.setText("test");
+    	passwordText.setText("punisher");
     }
 
     @Override

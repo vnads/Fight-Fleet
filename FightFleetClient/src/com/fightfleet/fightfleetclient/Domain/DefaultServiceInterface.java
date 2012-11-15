@@ -55,8 +55,8 @@ public class DefaultServiceInterface implements ServiceInterface {
         //Integer currentPlayerId = (Integer)data.get(currentPlayerIdKey);
         Integer lastMoveBy = (Integer)data.get(lastMoveByKey);
                 
-        Integer[] rawDataUserBoard = (Integer[])data.get(userBoardDataKey);
-        Integer[] rawDataOpponentBoard = (Integer[])data.get(opponentBoardDataKey);
+        Integer[] rawDataUserBoard = JSONDeserializer.getIntegerCollection(data.get(userBoardDataKey).toString());
+        Integer[] rawDataOpponentBoard = JSONDeserializer.getIntegerCollection(data.get(opponentBoardDataKey).toString());
         
         CellState[][] opponentBoardData = convertBoard(rawDataOpponentBoard);
         CellState[][] userBoardData = convertBoard(rawDataUserBoard);
@@ -84,13 +84,13 @@ public class DefaultServiceInterface implements ServiceInterface {
 	public GameListResponse requestGameList(GameListRequest request) {
 		
         String result = sendGet(request);
-        HashMap<String, Object>[] data = JSONDeserializer.getCollection(result);
+        HashMap<String, Object>[] data = JSONDeserializer.getComplexCollection(result);
                
-        Object gameIdKey = new String("gameId");
+        Object gameIdKey = new String("GameId");
         Object opponentUserIdKey = new String("OpponentUserId");
-        Object opponentUserNameKey = new String("OpponentUsername");
+        Object opponentUserNameKey = new String("OpponentUserName");
         Object createdOnKey = new String("CreatedOn");               
-        Object gameStatusKey = new String("AccessToken");
+        Object gameStatusKey = new String("GameStatus");
         Object lastMoveOnKey = new String("LastMoveOn");        
         Object lastMoveByKey = new String("LastMoveBy");
                         
@@ -99,7 +99,7 @@ public class DefaultServiceInterface implements ServiceInterface {
         for (HashMap<String, Object> element : data ){
         	Integer gameId = (Integer)element.get(gameIdKey);
         	Integer opponentUserId = (Integer)element.get(opponentUserIdKey);
-        	String opponentUserName = element.get(opponentUserNameKey).toString();
+        	String opponentUserName = element.get(opponentUserNameKey) != null ?element.get(opponentUserNameKey).toString() : "Waiting For Opponent"; 
         	String createdOn = element.get(createdOnKey).toString();
         	String lastMoveOn = element.get(lastMoveOnKey).toString();
         	GameStatus status = convertGameStatus(element.get(gameStatusKey).toString());    	        	
@@ -107,7 +107,7 @@ public class DefaultServiceInterface implements ServiceInterface {
         	        	        	       
         	GameInformation gi = new GameInformation(gameId, opponentUserId, opponentUserName, createdOn, status, lastMoveOn, lastMoveBy);
         	gameInfo.add(gi);
-        }                    
+        }
         
         GameListResponse response = new GameListResponse(gameInfo);
         return response;
@@ -148,9 +148,9 @@ public class DefaultServiceInterface implements ServiceInterface {
         Integer userId = (Integer)data.get(userIdKey);
         Integer opponentUserId = (Integer)data.get(opponentUserIdKey);      
         Integer lastMoveBy = (Integer)data.get(lastMoveByKey);
-                
-        Integer[] rawDataUserBoard = (Integer[])data.get(userBoardDataKey);
-        Integer[] rawDataOpponentBoard = (Integer[])data.get(opponentBoardDataKey);
+                              
+        Integer[] rawDataUserBoard = JSONDeserializer.getIntegerCollection(data.get(userBoardDataKey).toString());
+        Integer[] rawDataOpponentBoard = JSONDeserializer.getIntegerCollection(data.get(opponentBoardDataKey).toString());
         
         CellState[][] opponentBoardData = convertBoard(rawDataOpponentBoard);
         CellState[][] userBoardData = convertBoard(rawDataUserBoard);
@@ -174,7 +174,7 @@ public class DefaultServiceInterface implements ServiceInterface {
 	        in.close();
 		}
 		catch (Exception ex){
-			System.out.println("Broken in the get send");
+			System.out.println("Broken in the get send");	
 		}
 		return sb.toString();
 	}
@@ -184,25 +184,39 @@ public class DefaultServiceInterface implements ServiceInterface {
 		int x=0;
 		int y=0;
 		
-		for (int i=0; i < rawData.length; i++){
-			if (x==10){
-				x = 0;
-				y= y+1;
+		if (rawData == null){
+			for (int i=0; i < 100; i++){
+				if (x==10){
+					x = 0;
+					y= y+1;
+				}
+				
+			    board[x][y] = CellState.Empty;
+			    x++;
 			}
-			
-			switch (rawData[i]){
-			case 0:
-				board[x][y]= CellState.Empty;
-				break;
-			case 1:
-				board[x][y] = CellState.Ship;
-				break;
-			case 2:
-				board[x][y] = CellState.DamagedShip;
-				break;				
-			case 3:
-				board[x][y] = CellState.Miss;
-				break;
+		}
+		else{
+			for (int i=0; i < rawData.length; i++){
+				if (x==10){
+					x = 0;
+					y= y+1;
+				}
+				
+				switch (rawData[i]){
+				case 0:
+					board[x][y]= CellState.Empty;
+					break;
+				case 1:
+					board[x][y] = CellState.Ship;
+					break;
+				case 2:
+					board[x][y] = CellState.DamagedShip;
+					break;				
+				case 3:
+					board[x][y] = CellState.Miss;
+					break;
+				}
+				x++;
 			}
 		}
 		return board;
@@ -211,20 +225,20 @@ public class DefaultServiceInterface implements ServiceInterface {
 	GameStatus convertGameStatus(String str){
 		GameStatus gs = GameStatus.Finished;
 				
-		if (str == "Pending")
+		if (str.equals("Pending"))
 			gs = GameStatus.Pending;			
-		else if (str =="InProgress")
+		else if (str.equals("InProgress"))
 			gs = GameStatus.InProgress;		
-		else if (str == "Finished")
+		else if (str.equals("Finished"))
 			gs = GameStatus.Finished;					
 		return gs;
 	}
 	
 	MoveResult convertMoveResult(String str){
 		MoveResult result = MoveResult.Miss;
-	     if (str == "Hit")
+	     if (str.equals("Hit"))
 	    	result = MoveResult.Hit;
-	     else if (str == "Miss")
+	     else if (str.equals("Miss"))
 	    	 result = MoveResult.Miss;		
 	    return result;
 	}
