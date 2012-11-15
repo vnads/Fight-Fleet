@@ -1,20 +1,22 @@
 package com.fightfleet.fightfleetclient.Lib;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 public class JSONDeserializer {
     public static HashMap<String, Object> getData(String JSON){
-    	HashMap<String, Object> data = new HashMap<String, Object>();
     	try{
-    		data =  new ObjectMapper().readValue(JSON, HashMap.class);
+    		return new ObjectMapper().readValue(JSON, new TypeReference<HashMap<String, Object>>() {});
     	}
     	catch (Exception ex){
     		System.out.println("Broken");
     		//TODO: Add Logger
     	}
-    	return data;
+    	return null;
     }
 }
 

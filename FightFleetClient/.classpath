@@ -6,5 +6,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="C:/Users/shamedi/Downloads/jackson-core-2.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/shamedi/Downloads/jackson-databind-2.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/shamedi/Downloads/jackson-annotations-2.1.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
