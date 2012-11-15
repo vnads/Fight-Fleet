@@ -101,12 +101,14 @@ namespace FightFleet.Managers
                 else
                     currentPlayerId = game.Player1Id;
 
-                var moves = Move.GetForGame(game.GameId);
-                if (moves.Count() > 0)
+                var moves = Move.GetForGame(game.GameId).ToList();
+                if (moves.Any())
                 {
                     opponentBoard.BoardData = PopulateBoardData(opponentBoard, moves, opponentBoard.UserId);
                     userBoard.BoardData = PopulateBoardData(userBoard, moves, userBoard.UserId);
                 }
+
+                var opponent = currentUserId != game.Player1Id ? game.Player1 : (game.Player2 ?? new User());
                 
                 return new GameModel
                 {
@@ -117,7 +119,8 @@ namespace FightFleet.Managers
                     OpponentUserId = opponentBoard == null ? 0 : opponentBoard.UserId,
                     UserBoardData = userBoard.BoardData,
                     UserId = currentUserId,
-                    LastMoveBy =  currentPlayerId == game.Player1Id ? game.Player2Id : game.Player1Id
+                    LastMoveBy =  opponent.UserId,
+                    OpponentUsername = opponent.UserName
                 };
             }
         }

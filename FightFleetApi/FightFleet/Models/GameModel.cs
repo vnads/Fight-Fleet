@@ -6,6 +6,7 @@
         public string GameStatus { get; set; }
         public int UserId { get; set; }
         public int OpponentUserId { get; set; }
+        public string OpponentUsername { get; set; }
         public string UserBoardData { get; set; }
         public string OpponentBoardData { get; set; }
         public int CurrentPlayerId { get; set; }
