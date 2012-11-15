@@ -169,7 +169,7 @@ namespace FightFleet.Managers
                     GameStatus = ((GameStatus)game.GameStatusId).ToString(),
                     MoveResult = board.BoardDataArray[position] == "0" ? MoveResult.Miss.ToString() : MoveResult.Hit.ToString(),
                     Xcoord = position % 10,
-                    Ycooard = position / 10
+                    Ycoord = position / 10
                 };
                  
             }
@@ -193,10 +193,12 @@ namespace FightFleet.Managers
         {
             var boardMatrix = board.BoardDataArray;
 
-            string matrixStr = "";
+            string matrixStr = "[";
 
             for (int i = 0; i < boardMatrix.Length; i++)
             {
+                if (i != 0)
+                    matrixStr += ",";
                 var move = moves.FirstOrDefault(c => c.Position == i && c.UserId != userId);
 
                 if (boardMatrix[i] == "0")
@@ -205,6 +207,8 @@ namespace FightFleet.Managers
                 else
                     matrixStr += (move == null ? "1" : "2");
             }
+
+            matrixStr += "]";
 
             return matrixStr;
         }
