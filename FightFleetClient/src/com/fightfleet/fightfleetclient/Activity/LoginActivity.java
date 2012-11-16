@@ -2,6 +2,7 @@ package com.fightfleet.fightfleetclient.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -18,8 +19,10 @@ import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 
 public class LoginActivity extends Activity {
+	static final String PREFS_NAME = "MyPrefsFile";
 	ServiceInterface m_ServiceInterface = new DefaultServiceInterface();
 	UserData m_UserData;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +86,13 @@ public class LoginActivity extends Activity {
         	try	{
         		m_UserData = result;
         		Intent intent = new Intent(LoginActivity.this, GameListActivity.class);
-        		intent.putExtra("UserData", m_UserData);
+        		intent.putExtra("UserData", m_UserData);	        		
+        		//this is a horribly insecure way of saving credentials.
+	    	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+	    	    SharedPreferences.Editor editor = settings.edit();
+	            editor.putString("username", result.getUserName());
+	            editor.putString("password", result.getPassword());
+	    	    editor.commit();	        	              	     
         		startActivity(intent);
         	}
         	catch (Exception ex){

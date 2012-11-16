@@ -18,7 +18,8 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textViewUserTitle"
         android:text="@string/water_layout"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:typeface="monospace" />
 
     <TextView
         android:id="@+id/textViewOpponentWater"
@@ -26,59 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:text="@string/water_layout"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <Button
-        android:id="@+id/btnFire"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="31dp"
-        android:text="@string/button_fire_text"
-        android:onClick="onFireButtonClick" />
-
-    <TextView
-        android:id="@+id/textViewXLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnFire"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="77dp"
-        android:text="@string/x_label"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <EditText
-        android:id="@+id/editTextYCoordinate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textViewXLabel"
-        android:layout_alignBottom="@+id/textViewXLabel"
-        android:layout_marginLeft="33dp"
-        android:layout_toRightOf="@+id/textViewOpponentWater"
-        android:ems="1"
-        android:inputType="number" />
-
-    <EditText
-        android:id="@+id/editTextXCoordinate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editTextYCoordinate"
-        android:layout_below="@+id/editTextYCoordinate"
-        android:layout_marginTop="14dp"
-        android:ems="1"
-        android:inputType="number" >
-
-        <requestFocus />
-    </EditText>
-
-    <TextView
-        android:id="@+id/textViewYLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editTextXCoordinate"
-        android:layout_alignParentLeft="true"
-        android:text="@string/y_label"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:typeface="monospace" />
 
     <TextView
         android:id="@+id/textViewOpponentTitle"
@@ -90,12 +40,62 @@
         android:text="@string/title_opponent_board"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <Button
+        android:id="@+id/btnFire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="onFireButtonClick"
+        android:text="@string/button_fire_text" />
+
+    <TextView
+        android:id="@+id/textViewXLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/textViewUserWater"
+        android:layout_marginTop="16dp"
+        android:text="@string/x_label"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/editTextYCoordinate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnFire"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="24dp"
+        android:ems="3"
+        android:inputType="number" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textViewYLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editTextYCoordinate"
+        android:layout_alignParentLeft="true"
+        android:text="@string/y_label"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/editTextXCoordinate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textViewXLabel"
+        android:ems="3"
+        android:inputType="number" />
+
     <TextView
         android:id="@+id/textViewStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/editTextXCoordinate"
-        android:layout_below="@+id/textViewUserWater"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:text="@string/gameStatusLabel"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
