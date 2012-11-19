@@ -16,14 +16,12 @@
         android:id="@+id/editTextLoginEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextLoginPassword"
         android:layout_below="@+id/textViewLoginTitle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="17dp"
         android:ems="10"
-        android:inputType="textEmailAddress" >
-
-        <requestFocus />
-    </EditText>
+        android:hint="@string/hintUserName"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/editTextLoginPassword"
@@ -31,9 +29,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/editTextLoginEmail"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="22dp"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:hint="@string/hintPassword"
+        android:inputType="textPassword" >
+
+        <requestFocus />
+    </EditText>
 
     <Button
         android:id="@+id/buttonSubmitLogin"
@@ -41,8 +43,28 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/editTextLoginPassword"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="58dp"
-        android:text="@string/text_button_login"
-        android:onClick="onSubmitLoginClick" />
+        android:layout_marginTop="133dp"
+        android:onClick="onSubmitLoginClick"
+        android:text="@string/text_button_login" />
+
+    <EditText
+        android:id="@+id/editTextConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextLoginPassword"
+        android:layout_below="@+id/editTextLoginPassword"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:hint="@string/hintConfirm"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonSubmitLogin"
+        android:layout_alignRight="@+id/buttonSubmitLogin"
+        android:layout_below="@+id/buttonSubmitLogin"
+        android:layout_marginTop="59dp" />
 
 </RelativeLayout>

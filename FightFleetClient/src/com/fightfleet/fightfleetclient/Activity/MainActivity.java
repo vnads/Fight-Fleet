@@ -31,17 +31,17 @@ public class MainActivity extends Activity {
         return true;
     }
     
-    public void conceptButtonClickHandler(View view) {
-    	try {
-    		Intent intent = new Intent(this, GameActivity.class);
+    public void loginButtonClickHandler(View view){
+    	try{
+    		Intent intent = new Intent(this, LoginActivity.class);
     		startActivity(intent);
     	}
     	catch (Exception ex){
-    	     
+    		
     	}
     }
     
-    public void loginButtonClickHandler(View view){
+    public void gamesButtonClickHandler(View view){
     	try	{
     		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
     		
@@ -59,12 +59,14 @@ public class MainActivity extends Activity {
     		}
     	}
     	catch (Exception ex){
-    		
+    		//TODO:Add logging
     	}
     }
     
     public void createUserButtonClickHandler(View view){
-    	
+    	Intent intent = new Intent(this, LoginActivity.class);       	
+		intent.putExtra("IsCreateUser",  true);				    
+		startActivity(intent);
     }
     
     private class AutomaticLoginTask extends AsyncTask<UserData, Void, UserData> {

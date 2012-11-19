@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -48,13 +50,23 @@ public class GameActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_game, menu);
         return true;
     }
+    
+    @Override
+    public void onBackPressed() {
+ 		Intent intent = new Intent(this, GameListActivity.class);
+		intent.putExtra("UserData", m_UserData);	
+		startActivity(intent);
+    }
 
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                //NavUtils.navigateUpFromSameTask(this);
+         		Intent intent = new Intent(this, GameListActivity.class);
+        		intent.putExtra("UserData", m_UserData);	
+        		startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -70,14 +82,30 @@ public class GameActivity extends Activity {
 	    	Integer xCord = Integer.parseInt(txtXCord.getText().toString());
 	    	Integer yCord = Integer.parseInt(txtYCord.getText().toString());
 	    	
+	    	if (xCord < 0 || xCord > 9){	    		
+	    		displayError("X must be between 0 and 9");
+	    		return;
+	    	}
+	    	if (yCord< 0 || yCord> 9){	    		
+	    		displayError("Y must be between 0 and 9");
+	    		return;
+	    	}
+	    	
 	    	MoveRequest request = new MoveRequest(xCord, yCord, m_UserData.getUserID(), m_GameID,
 	    									m_UserData.getUUID(), getText(R.string.makeMoveEndPoint).toString() );
 	    	SendMoveTask task = new SendMoveTask();
 	    	task.execute(request);
     	}
-    	catch (Exception ex){
-    		System.out.println("Broken on Fire Button Click");
+    	catch (Exception ex){    		
+    		//TODO: Add logging
+    		displayError("Enter X&Y Values");
     	}
+    }
+    
+    void displayError(String message){
+        View v= findViewById(R.id.textViewStatus);
+        TextView txtVw = (TextView)v;
+        txtVw.setText(message);
     }
     
     /**
@@ -91,21 +119,29 @@ public class GameActivity extends Activity {
         View v= findViewById(R.id.textViewStatus);
         TextView txtVw = (TextView)v;
         String label = new String(); //stores the text to update the status label with
-        
+        Button b;
     	switch (status){
     	case Finished:
     		label = "Game Over!";
+    		b = (Button)findViewById(R.id.btnFire);
+			b.setEnabled(false);
     		break;
     	case InProgress:
     		if (lastMoveBy == m_UserData.getUserID()){
     			label = "Awaiting Opponent Move";
+    			b = (Button)findViewById(R.id.btnFire);
+    			b.setEnabled(false);
     		}
     		else{
     			label = "Awaiting Your Move!";
+    			b = (Button)findViewById(R.id.btnFire);
+    			b.setEnabled(true);
     		}
     		break;
     	case Pending:
     		label = "Waiting for Opponent.";
+    		b = (Button)findViewById(R.id.btnFire);
+    		b.setEnabled(false);
     		break;
     	}    	
     	txtVw.setText(label);
@@ -138,7 +174,7 @@ public class GameActivity extends Activity {
 		    }
         }
         txtVw.setText(label);
-    }
+    }   
     
     void buildBoard(){
        DrawBoardTask task = new	DrawBoardTask();

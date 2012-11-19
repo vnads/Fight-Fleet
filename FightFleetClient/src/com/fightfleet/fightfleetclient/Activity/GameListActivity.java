@@ -15,11 +15,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.fightfleet.fightfleetclient.R;
+import com.fightfleet.fightfleetclient.Domain.CreateGameRequest;
 import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
+import com.fightfleet.fightfleetclient.Domain.GameDataResponse;
 import com.fightfleet.fightfleetclient.Domain.GameListRequest;
 import com.fightfleet.fightfleetclient.Domain.GameListResponse;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.GameInformation;
+import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 
 public class GameListActivity extends Activity {
@@ -30,12 +33,15 @@ public class GameListActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_list);
+        setContentView(com.fightfleet.fightfleetclient.R.layout.activity_game_list);
         getActionBar().setDisplayHomeAsUpEnabled(true);
        
         Intent intent = getIntent();
         if (intent!=null){
         	m_UserData = intent.getParcelableExtra("UserData");
+        }
+        if (m_UserData == null && savedInstanceState != null){
+           m_UserData = savedInstanceState.getParcelable("UserData");
         }
 		GameInformationTask task = new GameInformationTask();
 		task.execute(m_UserData);
@@ -43,20 +49,65 @@ public class GameListActivity extends Activity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_game_list, menu);
+        getMenuInflater().inflate(com.fightfleet.fightfleetclient.R.menu.option_menu, menu);
         return true;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+    	 super.onSaveInstanceState(savedInstanceState);    
+  	     savedInstanceState.putParcelable("UserData", m_UserData);       
+	}
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
-                return true;
+                break;
+            case com.fightfleet.fightfleetclient.R.id.NewGame:
+            	startNewGame();
+            break;
+            	
+            	
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    void startNewGame(){
+    	CreateGameRequest request = new CreateGameRequest(m_UserData.getUserID(), m_UserData.getUUID(),	
+    												getText(com.fightfleet.fightfleetclient.R.string.createGameEndPoint).toString());
+    	StartNewGameTask task = new  StartNewGameTask();
+        task.execute(request);    	
+    }
+    
+    private class StartNewGameTask extends AsyncTask<CreateGameRequest, Void, GameDataResponse> {
+    	@Override
+    	protected GameDataResponse doInBackground(CreateGameRequest... params) {
+			try {								   
+				CreateGameRequest rq = params[0];
+				GameDataResponse response = m_ServiceInterface.requestCreateGame(rq);
+				return response;				
+				
+			} catch (Exception e) {
+				return new GameDataResponse(-1, null, null, -1, -1,  GameStatus.Finished, -1);
+			}
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(GameDataResponse result){
+        	try	{    		                    
+            	Intent intent = new Intent(GameListActivity.this, GameActivity.class);
+        		intent.putExtra("UserData", m_UserData);
+        		intent.putExtra("GameID", result.getGameID());
+        		startActivity(intent);              
+        	}
+        	catch (Exception ex){        		
+        		System.out.print(ex.getMessage());
+        	}
+    	}
+    }
+    
     
     private class GameInformationTask extends AsyncTask<UserData, Void, ArrayList<GameInformation>> {
     	@Override
@@ -64,7 +115,7 @@ public class GameListActivity extends Activity {
 			try {
 				if (params.length >0){
 					UserData d = params[0];
-					GameListRequest rq = new GameListRequest(d.getUserID(), d.getUUID(), getText(R.string.getGameListEndPoint).toString());
+					GameListRequest rq = new GameListRequest(d.getUserID(), d.getUUID(), getText(com.fightfleet.fightfleetclient.R.string.getGameListEndPoint).toString());
 					GameListResponse response = m_ServiceInterface.requestGameList(rq);
 					return response.getGameInformation();
 				}
@@ -80,14 +131,14 @@ public class GameListActivity extends Activity {
         		m_GameInformation = result;
             	ArrayAdapter<GameInformation> adapter = new ArrayAdapter<GameInformation>(GameListActivity.this,
             											android.R.layout.simple_list_item_1,m_GameInformation);
-            	final ListView listView = (ListView)GameListActivity.this.findViewById(R.id.listViewGames);
+            	final ListView listView = (ListView)GameListActivity.this.findViewById(com.fightfleet.fightfleetclient.R.id.listViewGames);
             	listView.setAdapter(adapter);
             	
             	listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
            
                     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                         GameInformation gameInfo = (GameInformation)listView.getItemAtPosition(position);
-                        //String str=(String)o;//As you are using Default String Adapter
+                        
                     	Intent intent = new Intent(GameListActivity.this, GameActivity.class);
                 		intent.putExtra("UserData", m_UserData);
                 		intent.putExtra("GameID", gameInfo.GetGameID());

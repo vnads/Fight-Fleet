@@ -7,13 +7,12 @@
     <string name="post_button_text">Post Test</string>
     <string name="get_button_text">Get</string>
     <string name="result_string">Results will be here.</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="text_button_login">Log In</string>
-    <string name="text_button_concept">Go To Concept Activity</string>
+    <string name="title_activity_main">Welcome</string>
+    <string name="text_button_gamelist">Show Games</string>
+    <string name="text_button_login">Login</string>
     <string name="text_button_create_user">Create User</string>
     <string name="title_activity_login">Log In</string>
     <string name="title_login_with_email">Log In Email Address</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_game_list">GameListActivity</string>
     <string name="title_activity_game">GameActivity</string>
 	<string name="title_opponent_board">Opponent\'s Board</string>
@@ -23,6 +22,12 @@
 	<string name="y_label">Enter Y Coordinate</string>
 	<string name="button_fire_text">Fire!</string>
 	<string name="gameStatusLabel">Status</string>
+	<string name="hintUserName">Enter email</string>
+	<string name="hintPassword">Password</string>
+	<string name="hintConfirm">Confirm</string>
+	<string name="loginStatusFailed">Failed Login</string>
+	<string name="loginStatusPasswordMismatch">Passwords do not match.</string>
+	<string name="new_game">New Game</string>
 	
 	<string name="baseApiURL">http://fightfleetapi.apphb.com</string>
 	<string name="createGameEndPoint">/Game/CreateGame</string>

@@ -13,24 +13,34 @@
         android:text="@string/welcome"
         tools:context=".MainActivity" />
 
-    <Button
-        android:id="@+id/buttonLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewWelcome"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:text="@string/text_button_login"
-        android:onClick="loginButtonClickHandler" />
-    
    <Button
-        android:id="@+id/buttonCreateUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonLogin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:text="@string/text_button_create_user"
-        android:onClick="createUserButtonClickHandler" />
+       android:id="@+id/buttonGameList"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/textViewWelcome"
+       android:layout_centerHorizontal="true"
+       android:layout_marginTop="19dp"
+       android:onClick="gamesButtonClickHandler"
+       android:text="@string/text_button_gamelist" />
+
+   <Button
+       android:id="@+id/btnLogin"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/buttonGameList"
+       android:layout_centerHorizontal="true"
+       android:layout_marginTop="29dp"
+       android:onClick="loginButtonClickHandler"
+       android:text="@string/text_button_login" />
+
+   <Button
+       android:id="@+id/buttonCreateUser"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/btnLogin"
+       android:layout_centerHorizontal="true"
+       android:layout_marginTop="36dp"
+       android:onClick="createUserButtonClickHandler"
+       android:text="@string/text_button_create_user" />
 
 </RelativeLayout>

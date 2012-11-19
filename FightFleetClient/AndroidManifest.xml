@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fightfleet.fightfleetclient"
     android:versionCode="1"
@@ -14,14 +15,14 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Activity.ConceptActivity"
+            android:name="com.fightfleet.fightfleetclient.Activity.ConceptActivity"
             android:label="@string/title_activity_concept" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fightfleet.fightfleetclient.MainActivity" />
         </activity>
         <activity
-            android:name=".Activity.MainActivity"
+            android:name="com.fightfleet.fightfleetclient.Activity.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,21 +31,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.LoginActivity"
+            android:name="com.fightfleet.fightfleetclient.Activity.LoginActivity"
             android:label="@string/title_activity_login" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fightfleet.fightfleetclient.MainActivity" />
         </activity>
         <activity
-            android:name=".Activity.GameListActivity"
+            android:name="com.fightfleet.fightfleetclient.Activity.GameListActivity"
             android:label="@string/title_activity_game_list" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fightfleet.fightfleetclient.Activity.LoginActivity" />
         </activity>
         <activity
-            android:name=".Activity.GameActivity"
+            android:name="com.fightfleet.fightfleetclient.Activity.GameActivity"
             android:label="@string/title_activity_game" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
