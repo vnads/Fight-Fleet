@@ -119,7 +119,7 @@ namespace FightFleet.Managers
                     OpponentUserId = opponentBoard == null ? 0 : opponentBoard.UserId,
                     UserBoardData = userBoard.BoardData,
                     UserId = currentUserId,
-                    LastMoveBy =  lastMove.UserId,
+                    LastMoveBy =  lastMove == null ? 0 : lastMove.UserId,
                     OpponentUsername = opponent.UserName
                 };
             }
