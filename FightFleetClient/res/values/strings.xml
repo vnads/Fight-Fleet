@@ -7,7 +7,7 @@
     <string name="post_button_text">Post Test</string>
     <string name="get_button_text">Get</string>
     <string name="result_string">Results will be here.</string>
-    <string name="title_activity_main">Welcome</string>
+    <string name="title_activity_main">Fight Fleet</string>
     <string name="text_button_gamelist">Show Games</string>
     <string name="text_button_login">Login</string>
     <string name="text_button_create_user">Create User</string>

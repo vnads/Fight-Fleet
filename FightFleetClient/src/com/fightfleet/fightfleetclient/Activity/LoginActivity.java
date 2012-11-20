@@ -63,25 +63,35 @@ public class LoginActivity extends Activity {
     }
     
     public void onSubmitLoginClick(View view){
-    	EditText emailText = (EditText) this.findViewById(R.id.editTextLoginEmail);
-    	EditText passwordText = (EditText)this.findViewById(R.id.editTextLoginPassword);
-    	EditText confirmText = (EditText)this.findViewById(R.id.editTextConfirm);
-    	
-    	String email = emailText.getText().toString();
-    	String password = passwordText.getText().toString();
-    	String confirm = confirmText.getText().toString();
-    	if (m_IsCreateUser){
-    		if (password.equals(confirm)){
-    			m_UserData = new UserData(email,password,-1,null);
-    			CreateUserTask createUserTask = new CreateUserTask();
-    			createUserTask.execute(m_UserData);
-    		}
-    		else SetStatus("Passwords do not match");
+    	try{    	
+	    	EditText emailText = (EditText) this.findViewById(R.id.editTextLoginEmail);
+	    	EditText passwordText = (EditText)this.findViewById(R.id.editTextLoginPassword);
+	    	EditText confirmText = (EditText)this.findViewById(R.id.editTextConfirm);
+	    	
+	    	String email = emailText.getText().toString();
+	    	String password = passwordText.getText().toString();
+	    	String confirm = confirmText.getText().toString();
+	    	if (m_IsCreateUser){
+	    		if (!email.equals("") && !password.equals("") && !confirm.equals("") && password.equals(confirm)){
+	    			m_UserData = new UserData(email,password,-1,null);
+	    			CreateUserTask createUserTask = new CreateUserTask();
+	    			createUserTask.execute(m_UserData);
+	    		}
+	    		else SetStatus("Invalid Entries");
+	    	}
+	    	else{
+	    		if (!email.equals("") && !password.equals("")){
+			    	m_UserData = new UserData(email, password, -1, null);
+			    	LoginTask loginTask = new LoginTask();	    	
+			    	loginTask.execute(m_UserData);
+	    		}
+	    		else{
+	    			SetStatus("Enter a username and password.");
+	    		}
+	    	}
     	}
-    	else{    		
-	    	m_UserData = new UserData(email, password, -1, null);
-	    	LoginTask loginTask = new LoginTask();	    	
-	    	loginTask.execute(m_UserData);
+    	catch (Exception ex){
+    		SetStatus("Login Failed.");
     	}
     }
     
@@ -102,7 +112,6 @@ public class LoginActivity extends Activity {
 				}
 				else return new UserData("", "", -1, null);
 			} catch (Exception e) {
-				SetStatus("Login Failed.");
 				return new UserData("", "", -1, null);
 			}
     	}
