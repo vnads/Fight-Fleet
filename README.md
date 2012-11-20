@@ -1,8 +1,6 @@
 Fight-Fleet
 ===========
 
-THIS IS WHERE OUR DEVELOPER INSTRUCTIONS WILL GO
+Welcome to the FightFleet GitHub Repository.
 
-===========
-
-<a href="https://github.com/vnads/Fight-Fleet/wiki">User Documentation</a>
+Visit www.fightfleet.com for more info
