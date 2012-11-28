@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
@@ -55,11 +56,13 @@ public class MainActivity extends Activity {
     		}
     		else{    	
 	    		Intent intent = new Intent(this, LoginActivity.class);
+	    		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  // closing all the activity (Nageena)
+	    		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // start a new activity (Nageena)
 	    		startActivity(intent);
     		}
     	}
     	catch (Exception ex){
-    		//TODO:Add logging
+    		Log.e(PREFS_NAME, ex.toString()); // by nageena
     	}
     }
     
@@ -79,7 +82,8 @@ public class MainActivity extends Activity {
 					LoginResponse response = m_ServiceInterface.requestLogin(rq);
 					return new UserData(response.getUserName(), d.getPassword(), response.getUserID(), response.getUUID());
 				}
-				else return new UserData("", "", -1, null);
+				else 
+					return new UserData("", "", -1, null);
 			} catch (Exception e) {
 				return new UserData("", "", -1, null);
 			}
