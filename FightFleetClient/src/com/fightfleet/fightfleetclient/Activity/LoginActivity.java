@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.fightfleet.fightfleetclient.R;
+import com.fightfleet.fightfleetclient.Domain.Constants;
 import com.fightfleet.fightfleetclient.Domain.CreateUserRequest;
 import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
 import com.fightfleet.fightfleetclient.Domain.LoginRequest;
@@ -22,6 +24,10 @@ import com.fightfleet.fightfleetclient.Lib.UserData;
 
 public class LoginActivity extends Activity {
 	static final String PREFS_NAME = "MyPrefsFile";
+	
+	// added log activity (Nageena) 
+	static final String TAG ="LoginActivity";
+	//
 	ServiceInterface m_ServiceInterface = new DefaultServiceInterface();
 	UserData m_UserData;
 	Boolean m_IsCreateUser = false;
@@ -76,6 +82,7 @@ public class LoginActivity extends Activity {
 	    			m_UserData = new UserData(email,password,-1,null);
 	    			CreateUserTask createUserTask = new CreateUserTask();
 	    			createUserTask.execute(m_UserData);
+	    			Log.d(Constants.TAG, "onClicked"); // added by Nageena 
 	    		}
 	    		else SetStatus("Invalid Entries");
 	    	}
@@ -84,6 +91,7 @@ public class LoginActivity extends Activity {
 			    	m_UserData = new UserData(email, password, -1, null);
 			    	LoginTask loginTask = new LoginTask();	    	
 			    	loginTask.execute(m_UserData);
+			    	Log.d(Constants.TAG, "onCliked"); // added by Nageena
 	    		}
 	    		else{
 	    			SetStatus("Enter a username and password.");
@@ -91,6 +99,7 @@ public class LoginActivity extends Activity {
 	    	}
     	}
     	catch (Exception ex){
+    		Log.e(Constants.TAG, ex.toString()); // added by Nageena
     		SetStatus("Login Failed.");
     	}
     }
@@ -112,6 +121,10 @@ public class LoginActivity extends Activity {
 				}
 				else return new UserData("", "", -1, null);
 			} catch (Exception e) {
+				// added by Nageena
+				Log.e(Constants.TAG, e.toString()); 
+				e.printStackTrace();
+				//
 				return new UserData("", "", -1, null);
 			}
     	}
@@ -131,7 +144,8 @@ public class LoginActivity extends Activity {
         		startActivity(intent);
         	}
         	catch (Exception ex){
-        		SetStatus("Login Failed.");
+        		Log.e(Constants.TAG, "Login Failed :" +ex);  // added by Nageena
+        		//SetStatus("Login Failed.");
         	}
     	}
     }
@@ -148,6 +162,7 @@ public class LoginActivity extends Activity {
 				}
 				else return new UserData("", "", -1, null);
 			} catch (Exception e) {
+				Log.e(Constants.TAG,e.toString()); // added by nageena 
 				SetStatus("Create User Failed.");
 				return new UserData("", "", -1, null);
 			}
@@ -168,6 +183,7 @@ public class LoginActivity extends Activity {
         		startActivity(intent);
         	}
         	catch (Exception ex){
+        		Log.e(Constants.TAG, ex.toString()); // added by nageena
         		SetStatus("Create User Failed.");        		
         	}
     	}
