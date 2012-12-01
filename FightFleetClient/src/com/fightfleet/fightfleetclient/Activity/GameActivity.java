@@ -1,7 +1,10 @@
 package com.fightfleet.fightfleetclient.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -19,20 +22,28 @@ import com.fightfleet.fightfleetclient.Domain.GameDataRequest;
 import com.fightfleet.fightfleetclient.Domain.GameDataResponse;
 import com.fightfleet.fightfleetclient.Domain.MoveRequest;
 import com.fightfleet.fightfleetclient.Domain.MoveResponse;
+import com.fightfleet.fightfleetclient.GameBoard.GameBoardListener;
+import com.fightfleet.fightfleetclient.GameBoard.GameBoardView;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.CellState;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.MoveResult;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 
-public class GameActivity extends Activity {
+public class GameActivity extends Activity implements GameBoardListener {
 	UserData m_UserData;
 	ServiceInterface m_ServiceInterface;
 	Integer m_GameID;
+
+	private boolean playersMove = false;
+	private GameBoardView viewGameBoard = null;
+	private int xCord, yCord = 0;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.view_game_board);
+               
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
         //Get the userdata from the intent
@@ -42,7 +53,12 @@ public class GameActivity extends Activity {
         	m_GameID = intent.getIntExtra("GameID", 1);
         }
         m_ServiceInterface = new DefaultServiceInterface();
-        buildBoard();
+        
+        // initialize our 2d game board renderer
+        viewGameBoard = (GameBoardView) findViewById(R.id.viewGameBoard);
+        viewGameBoard.setGameBoardListener(this);
+        
+        updateBoard();
     }
 
     @Override
@@ -72,42 +88,6 @@ public class GameActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     
-    
-    public void onFireButtonClick(View view){
-    	//Get the values of the text boxes.
-    	EditText txtXCord = (EditText) this.findViewById(R.id.editTextXCoordinate);
-    	EditText txtYCord = (EditText)this.findViewById(R.id.editTextYCoordinate);
-    	
-    	try{
-	    	Integer xCord = Integer.parseInt(txtXCord.getText().toString());
-	    	Integer yCord = Integer.parseInt(txtYCord.getText().toString());
-	    	
-	    	if (xCord < 0 || xCord > 9){	    		
-	    		displayError("X must be between 0 and 9");
-	    		return;
-	    	}
-	    	if (yCord< 0 || yCord> 9){	    		
-	    		displayError("Y must be between 0 and 9");
-	    		return;
-	    	}
-	    	
-	    	MoveRequest request = new MoveRequest(xCord, yCord, m_UserData.getUserID(), m_GameID,
-	    									m_UserData.getUUID(), getText(R.string.makeMoveEndPoint).toString() );
-	    	SendMoveTask task = new SendMoveTask();
-	    	task.execute(request);
-    	}
-    	catch (Exception ex){    		
-    		//TODO: Add logging
-    		displayError("Enter X&Y Values");
-    	}
-    }
-    
-    void displayError(String message){
-        View v= findViewById(R.id.textViewStatus);
-        TextView txtVw = (TextView)v;
-        txtVw.setText(message);
-    }
-    
     /**
      * An overloaded method.
      * This method updates the status label with whatever the game status is. 
@@ -116,35 +96,28 @@ public class GameActivity extends Activity {
      * @param lastMoveBy LastMoveBy is used to determine whether or not to enable the fire button.
      */
     void adjustGameStatus(GameStatus status, int lastMoveBy){
-        View v= findViewById(R.id.textViewStatus);
-        TextView txtVw = (TextView)v;
-        String label = new String(); //stores the text to update the status label with
-        Button b;
+       
+    	playersMove = false;
+    	
     	switch (status){
     	case Finished:
-    		label = "Game Over!";
-    		b = (Button)findViewById(R.id.btnFire);
-			b.setEnabled(false);
+    		viewGameBoard.setStatusMessage("Game Over!");
     		break;
     	case InProgress:
     		if (lastMoveBy == m_UserData.getUserID()){
-    			label = "Awaiting Opponent Move";
-    			b = (Button)findViewById(R.id.btnFire);
-    			b.setEnabled(false);
+        		viewGameBoard.setStatusMessage("Awaiting Opponent's Move!");
     		}
     		else{
-    			label = "Awaiting Your Move!";
-    			b = (Button)findViewById(R.id.btnFire);
-    			b.setEnabled(true);
+    			viewGameBoard.setStatusMessage("Awaiting Your Move!");
+    			playersMove = true;
     		}
     		break;
     	case Pending:
-    		label = "Waiting for Opponent.";
-    		b = (Button)findViewById(R.id.btnFire);
-    		b.setEnabled(false);
+    		viewGameBoard.setStatusMessage("Waiting for Opponent...");
     		break;
-    	}    	
-    	txtVw.setText(label);
+    	}
+    	
+    	viewGameBoard.invalidate();
     }
     
     /**
@@ -154,33 +127,39 @@ public class GameActivity extends Activity {
      * @param xCord
      * @param yCord
      */
+    /*
     void adjustGameStatus(MoveResult r, int xCord, int yCord, GameStatus gameStatus){
-        View v= findViewById(R.id.textViewStatus);
-        TextView txtVw = (TextView)v;
-        String label = new String(); //stores the text to update the status label with
+        //View v= findViewById(R.id.textViewStatus);
+        //TextView txtVw = (TextView)v;
+        //String label = new String(); //stores the text to update the status label with
         
         //If the game is over, set the label to game over.
         if (gameStatus == GameStatus.Finished){
-        	label = "Game Over!";
+        	viewGameBoard.setStatusMessage("GAME OVER!");
+        	//label = "Game Over!";
         }
         else{//otherwise, draw the game result.
 		    switch (r){
 		    case Hit:
-		    	label = "Hit!";
+		    	viewGameBoard.setStatusMessage("HIT!");
+		    	//label = "Hit!";
 		    	break;
 		    case Miss:
-		    	label = "Miss!";
+		    	viewGameBoard.setStatusMessage("MISS!");
+		    	//label = "Miss!";
 		    	break;
 		    }
         }
-        txtVw.setText(label);
+        //txtVw.setText(label);
+        
+        viewGameBoard.invalidate();
     }   
-    
-    void buildBoard(){
-       DrawBoardTask task = new	DrawBoardTask();
+    */
+    void updateBoard() {
+       final DrawBoardTask task = new DrawBoardTask();
        task.execute(m_UserData);
     }
-    
+    /*
     String generateBoardString(CellState[][] board, Boolean isUserBoard){
     	StringBuilder sb = new StringBuilder();
     	for (int i =0; i < board.length; i++){
@@ -209,7 +188,7 @@ public class GameActivity extends Activity {
     	
     	return sb.toString();
     }
-    
+    */
     private class DrawBoardTask extends AsyncTask<UserData, Void, GameDataResponse> {
     	@Override
     	protected GameDataResponse doInBackground(UserData... params) {
@@ -226,22 +205,14 @@ public class GameActivity extends Activity {
     	@Override
     	protected void onPostExecute(GameDataResponse result){
         	try	{
-	           	 String userBoard = generateBoardString(result.getUserBoardData(), true);
-	        	 String opponentBoard = generateBoardString(result.getOpponentBoardData(), false);
-	        	 
-	     	     View v= findViewById(R.id.textViewUserWater);
-	             TextView txtVw = (TextView)v;
-	             txtVw.setText(userBoard);
-	            
-	    	     v= findViewById(R.id.textViewOpponentWater);
-	             txtVw = (TextView)v;
-	             txtVw.setText(opponentBoard);
-	             
-	             
-	             adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());
+        		viewGameBoard.setBoardPlayer(result.getUserBoardData());
+        		viewGameBoard.setBoardOpponent(result.getOpponentBoardData());
+        		viewGameBoard.invalidate();             
+        		adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());   	
         	}
         	catch (Exception ex){
-        		System.out.println("Broken");
+        		System.out.println("DrawBoardTask - Broken");     		
+        		System.out.println(StackTraceToString(ex));
         	}
     	}
      }
@@ -262,6 +233,7 @@ public class GameActivity extends Activity {
 	    	@Override
 	    	protected void onPostExecute(MoveResponse result){
 	        	try	{
+	        		/*
 	        		 int xCord = result.getXCord();
 	        		 int yCord = result.getYCord();
 	        		 
@@ -269,10 +241,57 @@ public class GameActivity extends Activity {
 	        		 GameStatus gameStatus =  result.getGameStatus();
 	        		     		        	 
 	        		 adjustGameStatus(moveResult, xCord, yCord, gameStatus);
+	        		 */
+	        		 updateBoard();
 	        	}
 	        	catch (Exception ex){
-	        		System.out.println("Broken");
+	        		System.out.println("SendMoveTask - Broken");
 	        	}
 	    	}
 	 }
+
+	public boolean onGameBoardClick(final View view, int x, int y) {
+		System.out.println("onGameBoardClick: x: "+x+", y: "+y);		
+
+		xCord = x;
+		yCord = y;
+		
+		if (!playersMove) return false;
+		
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int which) {
+		        switch (which){
+		        case DialogInterface.BUTTON_POSITIVE:
+		        	try{
+		    	    	MoveRequest request = new MoveRequest(yCord, xCord, m_UserData.getUserID(), m_GameID, m_UserData.getUUID(),
+		    	    			                              getText(R.string.makeMoveEndPoint).toString() );
+		    	    	SendMoveTask task = new SendMoveTask();
+		    	    	task.execute(request);
+		        	}
+		        	catch (Exception ex){    		
+		        		//TODO: Add logging
+		        	}
+		        	break;
+		        case DialogInterface.BUTTON_NEGATIVE:
+		        	break;
+		        }
+		    }
+		};
+
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Target locked!").setMessage("Coordinates (x, y): "+x+", "+y+"")
+		.setNegativeButton("Cancel", dialogClickListener).setPositiveButton("Fire!", dialogClickListener).show();
+
+		return true;
+	}
+	
+	// For debugging purposes
+    public static String StackTraceToString(Exception ex) {
+    	String result = ex.toString() + "\n";
+    	StackTraceElement[] trace = ex.getStackTrace();
+    	for (int i = 0; i < trace.length; i++) {
+    		result += trace[i].toString() + "\n";
+    	}
+    	return result;
+    }
 }
