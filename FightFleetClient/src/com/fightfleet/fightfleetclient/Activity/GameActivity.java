@@ -1,40 +1,39 @@
 package com.fightfleet.fightfleetclient.Activity;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.fightfleet.fightfleetclient.R;
 import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
 import com.fightfleet.fightfleetclient.Domain.GameDataRequest;
 import com.fightfleet.fightfleetclient.Domain.GameDataResponse;
+import com.fightfleet.fightfleetclient.Domain.GameListRequest;
+import com.fightfleet.fightfleetclient.Domain.GameListResponse;
 import com.fightfleet.fightfleetclient.Domain.MoveRequest;
 import com.fightfleet.fightfleetclient.Domain.MoveResponse;
 import com.fightfleet.fightfleetclient.GameBoard.GameBoardListener;
 import com.fightfleet.fightfleetclient.GameBoard.GameBoardView;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
-import com.fightfleet.fightfleetclient.Lib.CellState;
+import com.fightfleet.fightfleetclient.Lib.GameInformation;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.MoveResult;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 
 public class GameActivity extends Activity implements GameBoardListener {
-	UserData m_UserData;
-	ServiceInterface m_ServiceInterface;
-	Integer m_GameID;
-
+	private UserData m_UserData = null;
+	private ServiceInterface m_ServiceInterface = null;
+	private Integer m_GameID = null;
+	private GameInformation m_GameInformation = null;
+	
 	private boolean playersMove = false;
 	private GameBoardView viewGameBoard = null;
 	private int xCord, yCord = 0;
@@ -46,18 +45,25 @@ public class GameActivity extends Activity implements GameBoardListener {
                
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
-        //Get the userdata from the intent
+        //Get UserData and GameInfo from the intent
         Intent intent = getIntent();
         if (intent!=null){
-        	m_UserData = intent.getParcelableExtra("UserData");	
+        	m_UserData = intent.getParcelableExtra("UserData");
         	m_GameID = intent.getIntExtra("GameID", 1);
         }
+                
         m_ServiceInterface = new DefaultServiceInterface();
-        
+
         // initialize our 2d game board renderer
         viewGameBoard = (GameBoardView) findViewById(R.id.viewGameBoard);
-        viewGameBoard.setGameBoardListener(this);
-        
+        viewGameBoard.setGameBoardListener(this);       
+        viewGameBoard.setNamePlayer(m_UserData.getUserName());
+ 
+        // populate m_GameInformation with info about current game,
+        // so we can get name of opponent etc...
+        GameInformationTask task = new GameInformationTask();
+		task.execute(m_UserData);
+		
         updateBoard();
     }
 
@@ -73,8 +79,7 @@ public class GameActivity extends Activity implements GameBoardListener {
 		intent.putExtra("UserData", m_UserData);	
 		startActivity(intent);
     }
-
-    
+ 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -105,7 +110,10 @@ public class GameActivity extends Activity implements GameBoardListener {
     		break;
     	case InProgress:
     		if (lastMoveBy == m_UserData.getUserID()){
-        		viewGameBoard.setStatusMessage("Awaiting Opponent's Move!");
+    			if (m_GameInformation == null)
+    				viewGameBoard.setStatusMessage("Awaiting Opponents's Move!");
+    			else
+    				viewGameBoard.setStatusMessage("Awaiting "+m_GameInformation.GetOpponentUserName()+"'s Move!");
     		}
     		else{
     			viewGameBoard.setStatusMessage("Awaiting Your Move!");
@@ -129,66 +137,61 @@ public class GameActivity extends Activity implements GameBoardListener {
      */
     /*
     void adjustGameStatus(MoveResult r, int xCord, int yCord, GameStatus gameStatus){
-        //View v= findViewById(R.id.textViewStatus);
-        //TextView txtVw = (TextView)v;
-        //String label = new String(); //stores the text to update the status label with
         
         //If the game is over, set the label to game over.
         if (gameStatus == GameStatus.Finished){
         	viewGameBoard.setStatusMessage("GAME OVER!");
-        	//label = "Game Over!";
         }
         else{//otherwise, draw the game result.
 		    switch (r){
 		    case Hit:
 		    	viewGameBoard.setStatusMessage("HIT!");
-		    	//label = "Hit!";
 		    	break;
 		    case Miss:
 		    	viewGameBoard.setStatusMessage("MISS!");
-		    	//label = "Miss!";
 		    	break;
 		    }
-        }
-        //txtVw.setText(label);
-        
+        }        
         viewGameBoard.invalidate();
     }   
     */
+    
     void updateBoard() {
        final DrawBoardTask task = new DrawBoardTask();
        task.execute(m_UserData);
     }
-    /*
-    String generateBoardString(CellState[][] board, Boolean isUserBoard){
-    	StringBuilder sb = new StringBuilder();
-    	for (int i =0; i < board.length; i++){
-    		for (int j = 0; j< board[i].length;j++){
-    			switch (board[i][j]){
-    			case DamagedShip:
-    				sb.append("H");
-    				break;
-    			case Empty:
-    				sb.append("_");
-    				break;
-    			case Ship:
-    				if (isUserBoard)
-    					sb.append("X");
-    				else sb.append("_");
-    				break;
-    			case Miss:
-    				sb.append("M");
+    
+    private class GameInformationTask extends AsyncTask<UserData, Void, ArrayList<GameInformation>> {
+    	@Override
+    	protected ArrayList<GameInformation> doInBackground(UserData... params) {
+    		try {
+    			if (params.length >0){
+    				UserData d = params[0];
+    				GameListRequest rq = new GameListRequest(d.getUserID(), d.getUUID(), getText(com.fightfleet.fightfleetclient.R.string.getGameListEndPoint).toString());
+    				GameListResponse response = m_ServiceInterface.requestGameList(rq);
+    				return response.getGameInformation();
     			}
-    			if (j == board[i].length-1){
-    				sb.append("\n");
-    			}
-    			else sb.append(" ");
+    			else return new ArrayList<GameInformation>();
+    		} catch (Exception e) {
+    			return new ArrayList<GameInformation>();
     		}
     	}
-    	
-    	return sb.toString();
+
+    	@Override
+    	protected void onPostExecute(ArrayList<GameInformation> result){
+    		try	{
+    			for (GameInformation g : result) {
+    				if (g.GetGameID() == m_GameID)
+    					m_GameInformation = g;
+    			} 			
+    			viewGameBoard.setNameOpponent(m_GameInformation.GetOpponentUserName());
+    		}
+    		catch (Exception ex){
+    			System.out.print(ex.getMessage());
+    		}
+    	}
     }
-    */
+    
     private class DrawBoardTask extends AsyncTask<UserData, Void, GameDataResponse> {
     	@Override
     	protected GameDataResponse doInBackground(UserData... params) {
@@ -206,7 +209,7 @@ public class GameActivity extends Activity implements GameBoardListener {
     	protected void onPostExecute(GameDataResponse result){
         	try	{
         		viewGameBoard.setBoardPlayer(result.getUserBoardData());
-        		viewGameBoard.setBoardOpponent(result.getOpponentBoardData());
+         		viewGameBoard.setBoardOpponent(result.getOpponentBoardData());       		
         		viewGameBoard.invalidate();             
         		adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());   	
         	}
@@ -233,15 +236,6 @@ public class GameActivity extends Activity implements GameBoardListener {
 	    	@Override
 	    	protected void onPostExecute(MoveResponse result){
 	        	try	{
-	        		/*
-	        		 int xCord = result.getXCord();
-	        		 int yCord = result.getYCord();
-	        		 
-	        		 MoveResult moveResult = result.getMoveResult();
-	        		 GameStatus gameStatus =  result.getGameStatus();
-	        		     		        	 
-	        		 adjustGameStatus(moveResult, xCord, yCord, gameStatus);
-	        		 */
 	        		 updateBoard();
 	        	}
 	        	catch (Exception ex){
@@ -279,7 +273,7 @@ public class GameActivity extends Activity implements GameBoardListener {
 		};
 
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Target locked!").setMessage("Coordinates (x, y): "+x+", "+y+"")
+		builder.setTitle("Target Locked!").setMessage("Coordinates (x, y): "+x+", "+y+"")
 		.setNegativeButton("Cancel", dialogClickListener).setPositiveButton("Fire!", dialogClickListener).show();
 
 		return true;
