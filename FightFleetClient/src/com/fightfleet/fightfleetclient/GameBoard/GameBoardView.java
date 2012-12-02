@@ -20,7 +20,7 @@ import com.fightfleet.fightfleetclient.Lib.CellState;
 /*
  * GameBoardView - 2D render engine for game board
  * 
- * @author chrono@eeky.net
+ * @author Lars Lindgren <chrono@eeky.net>
  */
 public class GameBoardView extends View implements OnTouchListener {
 
@@ -32,7 +32,10 @@ public class GameBoardView extends View implements OnTouchListener {
 
 	private CellState[][] boardPlayer = null;
 	private CellState[][] boardOpponent = null;
-
+	
+	private CellState[][] oldBoardPlayer = null;
+	private CellState[][] oldBoardOpponent = null;
+	
 	private int screenW = 0;
 	private int screenH = 0;
 
@@ -41,7 +44,7 @@ public class GameBoardView extends View implements OnTouchListener {
 	private int tileBorder = 1;
 
 	private int border = 30;
-	private int fontH = 20;
+	private int fontH = 18;
 	
 	private Rect rTopStrip = null;
 	private Rect rMidStrip = null;
@@ -58,6 +61,7 @@ public class GameBoardView extends View implements OnTouchListener {
 		super(context, attrs);
 		tiles = new ArrayList<GameBoardTile>();
 		setOnTouchListener(this);
+		paint.setAntiAlias(true);
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
@@ -135,7 +139,10 @@ public class GameBoardView extends View implements OnTouchListener {
 	@Override
 	public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
-	
+		
+		paint.setColor(Color.rgb(125,52,67));
+		canvas.drawRect(rBottomStrip, paint);
+
 		// text color
 		paint.setColor(Color.WHITE);
 
@@ -150,15 +157,16 @@ public class GameBoardView extends View implements OnTouchListener {
 
 		if (boardPlayer != null && boardOpponent != null) {
 			tiles.clear();
-			drawBoard(boardPlayer, canvas, rPlayer, true);
-			drawBoard(boardOpponent, canvas, rOpponent, false);
+			drawBoard(boardPlayer, oldBoardPlayer, canvas, rPlayer, true);
+			drawBoard(boardOpponent, oldBoardOpponent, canvas, rOpponent, false);
 		}
 	}
 
-	public void drawBoard(CellState[][] board, Canvas canvas, Rect dimensions, boolean isPlayerBoard) {
+	public void drawBoard(CellState[][] board, CellState[][] boardOld, Canvas canvas, Rect dimensions, boolean isPlayerBoard) {
 		final Random rn = new Random();
 		int x1, y1, x2, y2 = 0;
-
+		int border = 0;
+		
 		for (int y = 0; y < board.length; y++) {
 			for (int x = 0; x < board[y].length; x++) {
 
@@ -168,10 +176,19 @@ public class GameBoardView extends View implements OnTouchListener {
 				y2 = y1 + tileH;
 
 				Rect rWithBorder = new Rect(x1, y1, x2, y2);
-				paint.setColor(Color.rgb(64, 64, 192));
+				
+				// highlight latest move
+				if (boardOld != null && board[y][x] != boardOld[y][x]) {
+					paint.setColor(Color.YELLOW);
+					border = 3 * tileBorder;
+				} else {
+					paint.setColor(Color.rgb(64, 64, 192));
+					border = tileBorder;
+				}
+				
 				canvas.drawRect(rWithBorder, paint);
 
-				Rect rWithoutBorder = new Rect(x1 + tileBorder, y1 + tileBorder, x2 - tileBorder, y2 - tileBorder);
+				Rect rWithoutBorder = new Rect(x1 + border, y1 + border, x2 - border, y2 - border);
 				
 				// use some cool random blue colors for water
 				paint.setColor(Color.rgb(rn.nextInt(64), rn.nextInt(64) + 32, 192));
@@ -200,7 +217,7 @@ public class GameBoardView extends View implements OnTouchListener {
 	public static Point getTextCenterToDraw(String text, Rect region, Paint paint) {
 		Rect textBounds = new Rect();
 		paint.getTextBounds(text, 0, text.length(), textBounds);
-		float x = region.centerX() - textBounds.width() * 0.4f;
+		float x = region.centerX() - textBounds.width() * 0.5f;
 		float y = region.centerY() + textBounds.height() * 0.4f;
 		return new Point((int) x, (int) y);
 	}
@@ -209,14 +226,39 @@ public class GameBoardView extends View implements OnTouchListener {
 		this.gameListener = listener;
 	}
 
+	public CellState[][] getBoardPlayer() {
+		return this.boardPlayer;
+	}
+	
 	public void setBoardPlayer(CellState[][] board) {
 		this.boardPlayer = board;
 	}
-
+	
+	public CellState[][] getBoardOpponent() {
+		return this.boardOpponent;
+	}
+	
 	public void setBoardOpponent(CellState[][] board) {
 		this.boardOpponent = board;
 	}
+	
+	public void setOldBoardPlayer(CellState[][] board) {
+		this.oldBoardPlayer = board;
+	}
 
+	public CellState[][] getOldBoardPlayer() {
+		return this.oldBoardPlayer;
+	}
+	
+	public CellState[][] getOldBoardOpponent() {
+		return this.oldBoardOpponent;
+	}
+	
+	
+	public void setOldBoardOpponent(CellState[][] board) {
+		this.oldBoardOpponent = board;
+	}
+		
 	public void setStatusMessage(String message) {
 		this.statusMessage = message;
 	}

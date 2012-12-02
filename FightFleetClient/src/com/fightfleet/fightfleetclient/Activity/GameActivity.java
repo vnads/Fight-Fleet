@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.fightfleet.fightfleetclient.Domain.MoveResponse;
 import com.fightfleet.fightfleetclient.GameBoard.GameBoardListener;
 import com.fightfleet.fightfleetclient.GameBoard.GameBoardView;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
+import com.fightfleet.fightfleetclient.Lib.CellState;
 import com.fightfleet.fightfleetclient.Lib.GameInformation;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.MoveResult;
@@ -34,7 +36,11 @@ public class GameActivity extends Activity implements GameBoardListener {
 	private Integer m_GameID = null;
 	private GameInformation m_GameInformation = null;
 	
-	private boolean playersMove = false;
+	// interval for polling server
+	private int m_interval = 30000;
+	private Handler m_handler;
+	
+	private boolean playersTurn = false;
 	private GameBoardView viewGameBoard = null;
 	private int xCord, yCord = 0;
 	
@@ -64,9 +70,19 @@ public class GameActivity extends Activity implements GameBoardListener {
         GameInformationTask task = new GameInformationTask();
 		task.execute(m_UserData);
 		
+		// for polling the server
+		m_handler = new Handler();
+ 		startPollingServer();
+ 	   
         updateBoard();
     }
 
+    @Override
+    public void onStop() {
+    	super.onStop();
+    	stopPollingServer();
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_game, menu);
@@ -75,9 +91,11 @@ public class GameActivity extends Activity implements GameBoardListener {
     
     @Override
     public void onBackPressed() {
- 		Intent intent = new Intent(this, GameListActivity.class);
-		intent.putExtra("UserData", m_UserData);	
-		startActivity(intent);
+    	stopPollingServer();
+    	finish();
+ 		//Intent intent = new Intent(this, GameListActivity.class);
+		//intent.putExtra("UserData", m_UserData);	
+		//startActivity(intent);
     }
  
     @Override
@@ -102,7 +120,7 @@ public class GameActivity extends Activity implements GameBoardListener {
      */
     void adjustGameStatus(GameStatus status, int lastMoveBy){
        
-    	playersMove = false;
+    	playersTurn = false;
     	
     	switch (status){
     	case Finished:
@@ -117,7 +135,7 @@ public class GameActivity extends Activity implements GameBoardListener {
     		}
     		else{
     			viewGameBoard.setStatusMessage("Awaiting Your Move!");
-    			playersMove = true;
+    			playersTurn = true;
     		}
     		break;
     	case Pending:
@@ -207,11 +225,30 @@ public class GameActivity extends Activity implements GameBoardListener {
     	
     	@Override
     	protected void onPostExecute(GameDataResponse result){
-        	try	{
-        		viewGameBoard.setBoardPlayer(result.getUserBoardData());
-         		viewGameBoard.setBoardOpponent(result.getOpponentBoardData());       		
-        		viewGameBoard.invalidate();             
-        		adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());   	
+        	try	{  		
+        		// update gameboard (highlighting latest move for each player)
+
+        		// player
+        		if (viewGameBoard.getBoardPlayer() == null)
+					viewGameBoard.setBoardPlayer(result.getUserBoardData());
+
+				if (!generateCellStateString(viewGameBoard.getBoardPlayer())
+					.equals(generateCellStateString(result.getUserBoardData()))) {
+					viewGameBoard.setOldBoardPlayer(viewGameBoard.getBoardPlayer());			
+					viewGameBoard.setBoardPlayer(result.getUserBoardData());
+				}
+
+				// opponent
+				if (viewGameBoard.getBoardOpponent() == null)
+					viewGameBoard.setBoardOpponent(result.getOpponentBoardData());
+					
+				if (!generateCellStateString(viewGameBoard.getBoardOpponent())
+						.equals(generateCellStateString(result.getOpponentBoardData()))) {
+						viewGameBoard.setOldBoardOpponent(viewGameBoard.getBoardOpponent());			
+						viewGameBoard.setBoardOpponent(result.getOpponentBoardData());
+					}
+				
+        		adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());
         	}
         	catch (Exception ex){
         		System.out.println("DrawBoardTask - Broken");     		
@@ -236,7 +273,7 @@ public class GameActivity extends Activity implements GameBoardListener {
 	    	@Override
 	    	protected void onPostExecute(MoveResponse result){
 	        	try	{
-	        		 updateBoard();
+	        		updateBoard();
 	        	}
 	        	catch (Exception ex){
 	        		System.out.println("SendMoveTask - Broken");
@@ -250,13 +287,13 @@ public class GameActivity extends Activity implements GameBoardListener {
 		xCord = x;
 		yCord = y;
 		
-		if (!playersMove) return false;
+		if (!playersTurn) return false;
 		
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 		    public void onClick(DialogInterface dialog, int which) {
 		        switch (which){
 		        case DialogInterface.BUTTON_POSITIVE:
-		        	try{
+		        	try {
 		    	    	MoveRequest request = new MoveRequest(yCord, xCord, m_UserData.getUserID(), m_GameID, m_UserData.getUUID(),
 		    	    			                              getText(R.string.makeMoveEndPoint).toString() );
 		    	    	SendMoveTask task = new SendMoveTask();
@@ -278,6 +315,49 @@ public class GameActivity extends Activity implements GameBoardListener {
 
 		return true;
 	}
+	
+	// poll server
+	Runnable m_statusChecker = new Runnable() {
+	     public void run() {
+	          updateBoard();
+	          m_handler.postDelayed(m_statusChecker, m_interval);
+	     }
+	};
+	
+	void startPollingServer() {
+	    m_statusChecker.run(); 
+	}
+
+	void stopPollingServer() {
+	    m_handler.removeCallbacks(m_statusChecker);
+	}
+	
+	String generateCellStateString(CellState[][] board) {
+    	StringBuilder sb = new StringBuilder();
+    	for (int i = 0; i < board.length; i++) {
+    		for (int j = 0; j < board[i].length; j++) {
+    			switch (board[i][j]) {
+    			case DamagedShip:
+    				sb.append("H");
+    				break;
+    			case Empty:
+    				sb.append("_");
+    				break;
+    			case Ship:
+    				sb.append("X");
+    				break;
+    			case Miss:
+    				sb.append("M");
+    			}
+    			if (j == board[i].length - 1) {
+    				sb.append("\n");
+    			} else
+    				sb.append(" ");
+    		}
+    	}
+
+    	return sb.toString();
+    }
 	
 	// For debugging purposes
     public static String StackTraceToString(Exception ex) {
