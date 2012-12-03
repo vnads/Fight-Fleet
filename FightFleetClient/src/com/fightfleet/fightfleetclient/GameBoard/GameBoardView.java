@@ -18,7 +18,7 @@ import android.view.View.OnTouchListener;
 import com.fightfleet.fightfleetclient.Lib.CellState;
 
 /*
- * GameBoardView - 2D render engine for game board
+ * GameBoardView - 2D render engine for the game board
  * 
  * @author Lars Lindgren <chrono@eeky.net>
  */
@@ -33,8 +33,8 @@ public class GameBoardView extends View implements OnTouchListener {
 	private CellState[][] boardPlayer = null;
 	private CellState[][] boardOpponent = null;
 	
-	private CellState[][] oldBoardPlayer = null;
-	private CellState[][] oldBoardOpponent = null;
+	private CellState[][] boardPlayerOld = null;
+	private CellState[][] boardOpponentOld = null;
 	
 	private int screenW = 0;
 	private int screenH = 0;
@@ -140,6 +140,7 @@ public class GameBoardView extends View implements OnTouchListener {
 	public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		
+		// status message area
 		paint.setColor(Color.rgb(125,52,67));
 		canvas.drawRect(rBottomStrip, paint);
 
@@ -157,8 +158,8 @@ public class GameBoardView extends View implements OnTouchListener {
 
 		if (boardPlayer != null && boardOpponent != null) {
 			tiles.clear();
-			drawBoard(boardPlayer, oldBoardPlayer, canvas, rPlayer, true);
-			drawBoard(boardOpponent, oldBoardOpponent, canvas, rOpponent, false);
+			drawBoard(boardPlayer, boardPlayerOld, canvas, rPlayer, true);
+			drawBoard(boardOpponent, boardOpponentOld, canvas, rOpponent, false);
 		}
 	}
 
@@ -242,21 +243,20 @@ public class GameBoardView extends View implements OnTouchListener {
 		this.boardOpponent = board;
 	}
 	
-	public void setOldBoardPlayer(CellState[][] board) {
-		this.oldBoardPlayer = board;
+	public void setBoardPlayerOld(CellState[][] board) {
+		this.boardPlayerOld = board;
 	}
 
-	public CellState[][] getOldBoardPlayer() {
-		return this.oldBoardPlayer;
+	public CellState[][] getBoardPlayerOld() {
+		return this.boardPlayerOld;
 	}
 	
-	public CellState[][] getOldBoardOpponent() {
-		return this.oldBoardOpponent;
+	public CellState[][] getBoardOpponentOld() {
+		return this.boardOpponentOld;
 	}
 	
-	
-	public void setOldBoardOpponent(CellState[][] board) {
-		this.oldBoardOpponent = board;
+	public void setBoardOpponentOld(CellState[][] board) {
+		this.boardOpponentOld = board;
 	}
 		
 	public void setStatusMessage(String message) {

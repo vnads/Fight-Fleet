@@ -36,7 +36,7 @@ public class GameActivity extends Activity implements GameBoardListener {
 	private Integer m_GameID = null;
 	private GameInformation m_GameInformation = null;
 	
-	// interval for polling server
+	// Interval for polling server
 	private int m_interval = 30000;
 	private Handler m_handler;
 	
@@ -51,7 +51,7 @@ public class GameActivity extends Activity implements GameBoardListener {
                
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
-        //Get UserData and GameInfo from the intent
+        // Get UserData and GameInfo from the intent
         Intent intent = getIntent();
         if (intent!=null){
         	m_UserData = intent.getParcelableExtra("UserData");
@@ -60,17 +60,17 @@ public class GameActivity extends Activity implements GameBoardListener {
                 
         m_ServiceInterface = new DefaultServiceInterface();
 
-        // initialize our 2d game board renderer
+        // Initialize our 2d game board renderer
         viewGameBoard = (GameBoardView) findViewById(R.id.viewGameBoard);
         viewGameBoard.setGameBoardListener(this);       
         viewGameBoard.setNamePlayer(m_UserData.getUserName());
  
-        // populate m_GameInformation with info about current game,
-        // so we can get name of opponent etc...
+        // Populate m_GameInformation with info about current game.
+        // This way we can get name of opponent etc...
         GameInformationTask task = new GameInformationTask();
 		task.execute(m_UserData);
 		
-		// for polling the server
+		// Used for polling the server
 		m_handler = new Handler();
  		startPollingServer();
  	   
@@ -226,7 +226,9 @@ public class GameActivity extends Activity implements GameBoardListener {
     	@Override
     	protected void onPostExecute(GameDataResponse result){
         	try	{  		
-        		// update gameboard (highlighting latest move for each player)
+        		/*
+        		 * Update game board
+        		 */
 
         		// player
         		if (viewGameBoard.getBoardPlayer() == null)
@@ -234,7 +236,7 @@ public class GameActivity extends Activity implements GameBoardListener {
 
 				if (!generateCellStateString(viewGameBoard.getBoardPlayer())
 					.equals(generateCellStateString(result.getUserBoardData()))) {
-					viewGameBoard.setOldBoardPlayer(viewGameBoard.getBoardPlayer());			
+					viewGameBoard.setBoardPlayerOld(viewGameBoard.getBoardPlayer());			
 					viewGameBoard.setBoardPlayer(result.getUserBoardData());
 				}
 
@@ -244,7 +246,7 @@ public class GameActivity extends Activity implements GameBoardListener {
 					
 				if (!generateCellStateString(viewGameBoard.getBoardOpponent())
 						.equals(generateCellStateString(result.getOpponentBoardData()))) {
-						viewGameBoard.setOldBoardOpponent(viewGameBoard.getBoardOpponent());			
+						viewGameBoard.setBoardOpponentOld(viewGameBoard.getBoardOpponent());			
 						viewGameBoard.setBoardOpponent(result.getOpponentBoardData());
 					}
 				
