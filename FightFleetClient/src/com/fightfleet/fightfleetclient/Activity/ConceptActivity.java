@@ -1,6 +1,8 @@
 package com.fightfleet.fightfleetclient.Activity;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
@@ -19,9 +21,12 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.util.Log;
+import com.fightfleet.fightfleetclient.Domain.Constants;
 
 
 public class ConceptActivity extends Activity {
+	static final String TAG ="ConceptActivity"; //added by Chris
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,21 @@ public class ConceptActivity extends Activity {
 	    	getTask.execute(createUser);
     	}
     	catch (Exception ex){
-    	    		
+    		Log.e(Constants.TAG, ex.toString()); // added by Chris
+    		ex.printStackTrace();  //added by Chris 
+    		try { 
+  		      final String ERRORMSG = new String("Error testGet(), " +
+  		      		" check logcat for error code");
+  		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+  		                                                            MODE_APPEND);
+  		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+  		       osw.write(ERRORMSG);  //write out msg
+
+  		       osw.flush(); //clear buffer
+  		       osw.close(); //close file
+  		 } catch (IOException ioe) //catch io error
+  	      {ioe.printStackTrace();}
     	}
     }
     
@@ -54,7 +73,21 @@ public class ConceptActivity extends Activity {
     		postTask.execute(url);
     	}
     	catch (Exception ex){
-    		
+    		Log.e(Constants.TAG, ex.toString()); // added by Chris
+    		ex.printStackTrace();  //added by Chris 
+    		try { 
+  		      final String ERRORMSG = new String("Error testPost(), " +
+  		      		"    		                        check logcat for error code");
+  		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+  		                                                            MODE_APPEND);
+  		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+  		       osw.write(ERRORMSG);  //write out msg
+
+  		       osw.flush(); //clear buffer
+  		       osw.close(); //close file
+  		 } catch (IOException ioe) //catch io error
+  	      {ioe.printStackTrace();}
     	}
     }
     
@@ -80,6 +113,22 @@ public class ConceptActivity extends Activity {
     	        return sb.toString();
     		}
     		catch (Exception ex){
+    			Log.e(Constants.TAG, ex.toString()); // added by Chris
+        		ex.printStackTrace();  //added by Chris
+    			
+    			try { 
+      		      final String ERRORMSG = new String("Error GetTask<>.doInBackground(), " +
+      		      		"    		                        check logcat for error code");
+      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+      		                                                            MODE_APPEND);
+      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+      		       osw.write(ERRORMSG);  //write out msg
+
+      		       osw.flush(); //clear buffer
+      		       osw.close(); //close file
+      		 } catch (IOException ioe) //catch io error
+      	      {ioe.printStackTrace();}
     			return "There was an error.\n" + ex.getMessage() + "\n";
     		}
     	}
@@ -120,6 +169,22 @@ public class ConceptActivity extends Activity {
 			    }
 			    return sb.toString();
 			} catch (Exception e) {
+				Log.e(Constants.TAG, e.toString()); // added by Chris
+	    		e.printStackTrace();  //added by Chris
+	    		try { 
+	      		      final String ERRORMSG = new String("Error PostTask<>.doInBackground(), " +
+	      		      		"    		                        check logcat for error code");
+	      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	      		                                                            MODE_APPEND);
+	      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	      		       osw.write(ERRORMSG);  //write out msg
+
+	      		       osw.flush(); //clear buffer
+	      		       osw.close(); //close file
+	      		 } catch (IOException ioe) //catch io error
+	      	      {ioe.printStackTrace();}
+	    		
 				return "There was an error.\n"+ e.getMessage() + "\n" + e.getStackTrace();
 			}
     	}

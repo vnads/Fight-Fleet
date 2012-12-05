@@ -1,5 +1,9 @@
 package com.fightfleet.fightfleetclient.Activity;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.util.Log;
+
 
 import com.fightfleet.fightfleetclient.R;
 import com.fightfleet.fightfleetclient.Domain.CreateUserRequest;
@@ -19,9 +25,14 @@ import com.fightfleet.fightfleetclient.Domain.LoginRequest;
 import com.fightfleet.fightfleetclient.Domain.LoginResponse;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.UserData;
+import com.fightfleet.fightfleetclient.Domain.Constants;
+
 
 public class LoginActivity extends Activity {
 	static final String PREFS_NAME = "MyPrefsFile";
+	// added log activity (Nageena) 
+		static final String TAG ="LoginActivity";
+	//
 	ServiceInterface m_ServiceInterface = new DefaultServiceInterface();
 	UserData m_UserData;
 	Boolean m_IsCreateUser = false;
@@ -76,6 +87,7 @@ public class LoginActivity extends Activity {
 	    			m_UserData = new UserData(email,password,-1,null);
 	    			CreateUserTask createUserTask = new CreateUserTask();
 	    			createUserTask.execute(m_UserData);
+	    			Log.d(Constants.TAG, "onClicked"); // added by Nageena 
 	    		}
 	    		else SetStatus("Invalid Entries");
 	    	}
@@ -84,6 +96,7 @@ public class LoginActivity extends Activity {
 			    	m_UserData = new UserData(email, password, -1, null);
 			    	LoginTask loginTask = new LoginTask();	    	
 			    	loginTask.execute(m_UserData);
+			    	Log.d(Constants.TAG, "onClicked"); // added by Nageena
 	    		}
 	    		else{
 	    			SetStatus("Enter a username and password.");
@@ -91,7 +104,21 @@ public class LoginActivity extends Activity {
 	    	}
     	}
     	catch (Exception ex){
+    		Log.e(Constants.TAG, ex.toString()); // added by Nageena
     		SetStatus("Login Failed.");
+    		try { 
+    		      final String ERRORMSG = new String("Error LoginActivity<>.onSubmitLoginClick(), " +
+    		      		"    		                        check logcat for error code");
+    		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+    		                                                            MODE_APPEND);
+    		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+    		       osw.write(ERRORMSG);  //write out msg
+
+    		       osw.flush(); //clear buffer
+    		       osw.close(); //close file
+    		 } catch (IOException ioe) //catch io error
+    	      {ioe.printStackTrace();}
     	}
     }
     
@@ -112,6 +139,24 @@ public class LoginActivity extends Activity {
 				}
 				else return new UserData("", "", -1, null);
 			} catch (Exception e) {
+				// added by Nageena
+				Log.e(Constants.TAG, e.toString()); 
+				e.printStackTrace();
+				//
+				try { 
+	    		      final String ERRORMSG = new String("Error LoginTask<>.doInBackground(), " +
+	    		      		"    		                        check logcat for error code");
+	    		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	    		                                                            MODE_APPEND);
+	    		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	    		       osw.write(ERRORMSG);  //write out msg
+
+	    		       osw.flush(); //clear buffer
+	    		       osw.close(); //close file
+	    		 } catch (IOException ioe) //catch io error
+	    	      {ioe.printStackTrace();}
+
 				return new UserData("", "", -1, null);
 			}
     	}
@@ -131,7 +176,21 @@ public class LoginActivity extends Activity {
         		startActivity(intent);
         	}
         	catch (Exception ex){
+        		Log.e(Constants.TAG, "Login Failed :" +ex);  // added by Nageena
         		SetStatus("Login Failed.");
+        		try { 
+      		      final String ERRORMSG = new String("Error LoginActivity<>.onPostExecute(), " +
+      		      		"    		                        check logcat for error code");
+      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+      		                                                            MODE_APPEND);
+      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+      		       osw.write(ERRORMSG);  //write out msg
+
+      		       osw.flush(); //clear buffer
+      		       osw.close(); //close file
+      		 } catch (IOException ioe) //catch io error
+      	      {ioe.printStackTrace();}
         	}
     	}
     }
@@ -148,7 +207,21 @@ public class LoginActivity extends Activity {
 				}
 				else return new UserData("", "", -1, null);
 			} catch (Exception e) {
+				Log.e(Constants.TAG,e.toString()); // added by nageena 
 				SetStatus("Create User Failed.");
+				try { 
+	    		      final String ERRORMSG = new String("Error CreateUserTask<>.doInBackground(), " +
+	    		      		"    		                        check logcat for error code");
+	    		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	    		                                                            MODE_APPEND);
+	    		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	    		       osw.write(ERRORMSG);  //write out msg
+
+	    		       osw.flush(); //clear buffer
+	    		       osw.close(); //close file
+	    		 } catch (IOException ioe) //catch io error
+	    	      {ioe.printStackTrace();}
 				return new UserData("", "", -1, null);
 			}
     	}
@@ -168,7 +241,21 @@ public class LoginActivity extends Activity {
         		startActivity(intent);
         	}
         	catch (Exception ex){
-        		SetStatus("Create User Failed.");        		
+        		Log.e(Constants.TAG, ex.toString()); // added by nageena
+        		SetStatus("Create User Failed."); 
+        		try { 
+      		      final String ERRORMSG = new String("Error LoginActivity<>.onPostExecute(), " +
+      		      		"    		                        check logcat for error code");
+      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+      		                                                            MODE_APPEND);
+      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+      		       osw.write(ERRORMSG);  //write out msg
+
+      		       osw.flush(); //clear buffer
+      		       osw.close(); //close file
+      		 } catch (IOException ioe) //catch io error
+      	      {ioe.printStackTrace();}
         	}
     	}
     }
