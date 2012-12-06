@@ -1,5 +1,8 @@
 package com.fightfleet.fightfleetclient.Activity;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.util.Log;
 
 import com.fightfleet.fightfleetclient.R;
 import com.fightfleet.fightfleetclient.Domain.CreateGameRequest;
@@ -24,8 +28,10 @@ import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.GameInformation;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.UserData;
+import com.fightfleet.fightfleetclient.Domain.Constants;
 
 public class GameListActivity extends Activity {
+	static final String TAG ="GameListActivity"; //added by Chris
 
 	UserData m_UserData;
 	ArrayList<GameInformation> m_GameInformation;
@@ -90,6 +96,21 @@ public class GameListActivity extends Activity {
 				return response;				
 				
 			} catch (Exception e) {
+				Log.e(Constants.TAG, e.toString()); // added by Chris
+	    		e.printStackTrace();  //added by Chris
+	    		try { 
+	      		      final String ERRORMSG = new String("Error StartNewGameTask<>.doInBackground(), " +
+	      		      		"    		                        check logcat for error code");
+	      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	      		                                                            MODE_APPEND);
+	      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	      		       osw.write(ERRORMSG);  //write out msg
+
+	      		       osw.flush(); //clear buffer
+	      		       osw.close(); //close file
+	      		 } catch (IOException ioe) //catch io error
+	      	      {ioe.printStackTrace();}
 				return new GameDataResponse(-1, null, null, -1, -1,  GameStatus.Finished, -1);
 			}
     	}
@@ -102,8 +123,23 @@ public class GameListActivity extends Activity {
         		intent.putExtra("GameID", result.getGameID());
         		startActivity(intent);              
         	}
-        	catch (Exception ex){        		
+        	catch (Exception ex){
+        		Log.e(Constants.TAG, ex.toString()); // added by Chris
+        		ex.printStackTrace();  //added by Chris
         		System.out.print(ex.getMessage());
+        		try { 
+	      		      final String ERRORMSG = new String("Error PostTask<>.onPostExecute(), " +
+	      		      		"    		                        check logcat for error code");
+	      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	      		                                                            MODE_APPEND);
+	      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	      		       osw.write(ERRORMSG);  //write out msg
+
+	      		       osw.flush(); //clear buffer
+	      		       osw.close(); //close file
+	      		 } catch (IOException ioe) //catch io error
+	      	      {ioe.printStackTrace();}
         	}
     	}
     }
@@ -121,6 +157,21 @@ public class GameListActivity extends Activity {
 				}
 				else return new ArrayList<GameInformation>();
 			} catch (Exception e) {
+				Log.e(Constants.TAG, e.toString()); // added by Chris
+	    		e.printStackTrace();  //added by Chris
+	    		try { 
+	      		      final String ERRORMSG = new String("Error GameInformationTask.doInBackground(), " +
+	      		      		"    		                        check logcat for error code");
+	      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	      		                                                            MODE_APPEND);
+	      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	      		       osw.write(ERRORMSG);  //write out msg
+
+	      		       osw.flush(); //clear buffer
+	      		       osw.close(); //close file
+	      		 } catch (IOException ioe) //catch io error
+	      	      {ioe.printStackTrace();}
 				return new ArrayList<GameInformation>();
 			}
     	}
@@ -147,8 +198,22 @@ public class GameListActivity extends Activity {
                 });
         	}
         	catch (Exception ex){
-        		
+        		Log.e(Constants.TAG, ex.toString()); // added by Chris
+        		ex.printStackTrace();  //added by Chris        		
         		System.out.print(ex.getMessage());
+        		try { 
+	      		      final String ERRORMSG = new String("Error GameInformationTask<>.onPostExecute(), " +
+	      		      		"    		                        check logcat for error code");
+	      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	      		                                                            MODE_APPEND);
+	      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	      		       osw.write(ERRORMSG);  //write out msg
+
+	      		       osw.flush(); //clear buffer
+	      		       osw.close(); //close file
+	      		 } catch (IOException ioe) //catch io error
+	      	      {ioe.printStackTrace();}
         	}
     	}
     }

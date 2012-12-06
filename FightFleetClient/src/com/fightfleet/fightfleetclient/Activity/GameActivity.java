@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.util.Log;
 
 import com.fightfleet.fightfleetclient.R;
 import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
@@ -24,8 +25,16 @@ import com.fightfleet.fightfleetclient.Lib.CellState;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.MoveResult;
 import com.fightfleet.fightfleetclient.Lib.UserData;
+import com.fightfleet.fightfleetclient.Domain.Constants;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 
 public class GameActivity extends Activity {
+	static final String TAG ="GameActivity"; //added by Chris
 	UserData m_UserData;
 	ServiceInterface m_ServiceInterface;
 	Integer m_GameID;
@@ -96,9 +105,24 @@ public class GameActivity extends Activity {
 	    	SendMoveTask task = new SendMoveTask();
 	    	task.execute(request);
     	}
-    	catch (Exception ex){    		
-    		//TODO: Add logging
+    	catch (Exception ex){
     		displayError("Enter X&Y Values");
+    		Log.e(Constants.TAG, ex.toString()); 
+    		ex.printStackTrace();    	
+    		
+    		try { 
+    		      final String ERRORMSG = new String("Error GameActivity<>.onFireButtonClick(), " +
+    		      		"    		                        check logcat for error code");
+    		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+    		                                                            MODE_APPEND);
+    		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+    		       osw.write(ERRORMSG);  //write out msg
+
+    		       osw.flush(); //clear buffer
+    		       osw.close(); //close file
+    		 } catch (IOException ioe) //catch io error
+    	      {ioe.printStackTrace();}
     	}
     }
     
@@ -219,6 +243,21 @@ public class GameActivity extends Activity {
 		        GameDataResponse response =  m_ServiceInterface.requestGameData(request);
 		    	return response;
 			} catch (Exception e) {
+				Log.e(Constants.TAG, e.toString());
+	    		e.printStackTrace();
+	    		try { 
+	    		      final String ERRORMSG = new String("Error DrawBoardTask<>.doInBackground(), " +
+	    		      		"    		                        check logcat for error code");
+	    		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	    		                                                            MODE_APPEND);
+	    		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	    		       osw.write(ERRORMSG);  //write out msg
+
+	    		       osw.flush(); //clear buffer
+	    		       osw.close(); //close file
+	    		 } catch (IOException ioe) //catch io error
+	    	      {ioe.printStackTrace();}
 				return new GameDataResponse(-1, null, null, -1, -1, GameStatus.Finished, -1);
 			}
     	}
@@ -241,7 +280,22 @@ public class GameActivity extends Activity {
 	             adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());
         	}
         	catch (Exception ex){
+        		Log.e(Constants.TAG, ex.toString()); // added by Chris
+        		ex.printStackTrace();  //added by Chris
         		System.out.println("Broken");
+        		try { 
+	    		      final String ERRORMSG = new String("Error DrawBoardTask<>.onPostExecute(), " +
+	    		      		"    		                        check logcat for error code");
+	    		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	    		                                                            MODE_APPEND);
+	    		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	    		       osw.write(ERRORMSG);  //write out msg
+
+	    		       osw.flush(); //clear buffer
+	    		       osw.close(); //close file
+	    		 } catch (IOException ioe) //catch io error
+	    	      {ioe.printStackTrace();}
         	}
     	}
      }
@@ -255,6 +309,8 @@ public class GameActivity extends Activity {
 			        MoveResponse response = m_ServiceInterface.requestMove(request);
 			    	return response;
 				} catch (Exception e) {
+					Log.e(Constants.TAG, e.toString());
+		    		e.printStackTrace();  
 					return new MoveResponse(GameStatus.Finished, MoveResult.Miss, 0, 0);
 				}
 	    	}
@@ -271,7 +327,22 @@ public class GameActivity extends Activity {
 	        		 adjustGameStatus(moveResult, xCord, yCord, gameStatus);
 	        	}
 	        	catch (Exception ex){
+	        		Log.e(Constants.TAG, ex.toString()); // added by Chris
+	        		ex.printStackTrace();  //added by Chris
 	        		System.out.println("Broken");
+	        		try { 
+		    		      final String ERRORMSG = new String("Error SendMoveTask<>.onPostExecute(), " +
+		    		      		"    		                        check logcat for error code");
+		    		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+		    		                                                            MODE_APPEND);
+		    		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+		    		       osw.write(ERRORMSG);  //write out msg
+
+		    		       osw.flush(); //clear buffer
+		    		       osw.close(); //close file
+		    		 } catch (IOException ioe) //catch io error
+		    	      {ioe.printStackTrace();}
 	        	}
 	    	}
 	 }

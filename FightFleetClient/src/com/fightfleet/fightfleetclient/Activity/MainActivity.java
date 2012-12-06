@@ -1,4 +1,9 @@
 package com.fightfleet.fightfleetclient.Activity;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+import com.fightfleet.fightfleetclient.Domain.Constants;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.util.Log;
 
 import com.fightfleet.fightfleetclient.R;
 import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
@@ -16,6 +22,7 @@ import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 
 public class MainActivity extends Activity {
+	static final String TAG ="MainActivity"; //added by Chris
    static final String PREFS_NAME = "MyPrefsFile";
    UserData m_UserData;
     ServiceInterface m_ServiceInterface = new DefaultServiceInterface();
@@ -37,7 +44,21 @@ public class MainActivity extends Activity {
     		startActivity(intent);
     	}
     	catch (Exception ex){
-    		
+    		Log.e(Constants.TAG, ex.toString()); // added by Chris
+    		ex.printStackTrace();  //added by Chris
+    		try { 
+  		      final String ERRORMSG = new String("Error MainActivity<>.loginButtonClickHandler(), " +
+  		      		"    		                        check logcat for error code");
+  		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+  		                                                            MODE_APPEND);
+  		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+  		       osw.write(ERRORMSG);  //write out msg
+
+  		       osw.flush(); //clear buffer
+  		       osw.close(); //close file
+  		 } catch (IOException ioe) //catch io error
+  	      {ioe.printStackTrace();}
     	}
     }
     
@@ -59,7 +80,21 @@ public class MainActivity extends Activity {
     		}
     	}
     	catch (Exception ex){
-    		//TODO:Add logging
+    		Log.e(Constants.TAG, ex.toString()); // added by Chris
+    		ex.printStackTrace();  //added by Chris
+    		try { 
+  		      final String ERRORMSG = new String("Error MainActivity<>.gamesButtonClickHandler(), " +
+  		      		"    		                        check logcat for error code");
+  		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+  		                                                            MODE_APPEND);
+  		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+  		       osw.write(ERRORMSG);  //write out msg
+
+  		       osw.flush(); //clear buffer
+  		       osw.close(); //close file
+  		 } catch (IOException ioe) //catch io error
+  	      {ioe.printStackTrace();}
     	}
     }
     
@@ -81,6 +116,21 @@ public class MainActivity extends Activity {
 				}
 				else return new UserData("", "", -1, null);
 			} catch (Exception e) {
+				Log.e(Constants.TAG, e.toString()); // added by Chris
+	    		e.printStackTrace();  //added by Chris
+	    		try { 
+	    		      final String ERRORMSG = new String("Error AutomaticLoginTask<>.doInBackground(), " +
+	    		      		"    		                        check logcat for error code");
+	    		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+	    		                                                            MODE_APPEND);
+	    		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+	    		       osw.write(ERRORMSG);  //write out msg
+
+	    		       osw.flush(); //clear buffer
+	    		       osw.close(); //close file
+	    		 } catch (IOException ioe) //catch io error
+	    	      {ioe.printStackTrace();}
 				return new UserData("", "", -1, null);
 			}
     	}
@@ -94,7 +144,22 @@ public class MainActivity extends Activity {
         		startActivity(intent);
         	}
         	catch (Exception ex){
+        		Log.e(Constants.TAG, ex.toString()); // added by Chris
+        		ex.printStackTrace();  //added by Chris
         		System.out.println("Broken");
+        		try { 
+      		      final String ERRORMSG = new String("Error AutomaticLoginTask<>.onPostExecute(), " +
+      		      		"    		                        check logcat for error code");
+      		      FileOutputStream fOut = openFileOutput("androidlog.txt",
+      		                                                            MODE_APPEND);
+      		       OutputStreamWriter osw = new OutputStreamWriter(fOut); 
+
+      		       osw.write(ERRORMSG);  //write out msg
+
+      		       osw.flush(); //clear buffer
+      		       osw.close(); //close file
+      		 } catch (IOException ioe) //catch io error
+      	      {ioe.printStackTrace();}
         	}
     	}
     }
