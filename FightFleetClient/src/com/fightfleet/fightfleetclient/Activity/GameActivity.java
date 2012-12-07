@@ -1,50 +1,88 @@
 package com.fightfleet.fightfleetclient.Activity;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.fightfleet.fightfleetclient.R;
 import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
 import com.fightfleet.fightfleetclient.Domain.GameDataRequest;
 import com.fightfleet.fightfleetclient.Domain.GameDataResponse;
+import com.fightfleet.fightfleetclient.Domain.GameListRequest;
+import com.fightfleet.fightfleetclient.Domain.GameListResponse;
 import com.fightfleet.fightfleetclient.Domain.MoveRequest;
 import com.fightfleet.fightfleetclient.Domain.MoveResponse;
+import com.fightfleet.fightfleetclient.GameBoard.GameBoardListener;
+import com.fightfleet.fightfleetclient.GameBoard.GameBoardView;
 import com.fightfleet.fightfleetclient.Interface.ServiceInterface;
 import com.fightfleet.fightfleetclient.Lib.CellState;
+import com.fightfleet.fightfleetclient.Lib.GameInformation;
 import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.MoveResult;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 
-public class GameActivity extends Activity {
-	UserData m_UserData;
-	ServiceInterface m_ServiceInterface;
-	Integer m_GameID;
+public class GameActivity extends Activity implements GameBoardListener {
+	private UserData m_UserData = null;
+	private ServiceInterface m_ServiceInterface = null;
+	private Integer m_GameID = null;
+	private GameInformation m_GameInformation = null;
+	
+	// Interval for polling server
+	private int m_interval = 30000;
+	private Handler m_handler;
+	
+	private boolean playersTurn = false;
+	private GameBoardView viewGameBoard = null;
+	private int xCord, yCord = 0;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.view_game_board);
+               
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
-        //Get the userdata from the intent
+        // Get UserData and GameInfo from the intent
         Intent intent = getIntent();
         if (intent!=null){
-        	m_UserData = intent.getParcelableExtra("UserData");	
+        	m_UserData = intent.getParcelableExtra("UserData");
         	m_GameID = intent.getIntExtra("GameID", 1);
         }
+                
         m_ServiceInterface = new DefaultServiceInterface();
-        buildBoard();
+
+        // Initialize our 2d game board renderer
+        viewGameBoard = (GameBoardView) findViewById(R.id.viewGameBoard);
+        viewGameBoard.setGameBoardListener(this);       
+        viewGameBoard.setNamePlayer(m_UserData.getUserName());
+ 
+        // Populate m_GameInformation with info about current game.
+        // This way we can get name of opponent etc...
+        GameInformationTask task = new GameInformationTask();
+		task.execute(m_UserData);
+		
+		// Used for polling the server
+		m_handler = new Handler();
+ 		startPollingServer();
+ 	   
+        updateBoard();
     }
 
+    @Override
+    public void onStop() {
+    	super.onStop();
+    	stopPollingServer();
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_game, menu);
@@ -53,12 +91,13 @@ public class GameActivity extends Activity {
     
     @Override
     public void onBackPressed() {
- 		Intent intent = new Intent(this, GameListActivity.class);
-		intent.putExtra("UserData", m_UserData);	
-		startActivity(intent);
+    	stopPollingServer();
+    	finish();
+ 		//Intent intent = new Intent(this, GameListActivity.class);
+		//intent.putExtra("UserData", m_UserData);	
+		//startActivity(intent);
     }
-
-    
+ 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -72,42 +111,6 @@ public class GameActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     
-    
-    public void onFireButtonClick(View view){
-    	//Get the values of the text boxes.
-    	EditText txtXCord = (EditText) this.findViewById(R.id.editTextXCoordinate);
-    	EditText txtYCord = (EditText)this.findViewById(R.id.editTextYCoordinate);
-    	
-    	try{
-	    	Integer xCord = Integer.parseInt(txtXCord.getText().toString());
-	    	Integer yCord = Integer.parseInt(txtYCord.getText().toString());
-	    	
-	    	if (xCord < 0 || xCord > 9){	    		
-	    		displayError("X must be between 0 and 9");
-	    		return;
-	    	}
-	    	if (yCord< 0 || yCord> 9){	    		
-	    		displayError("Y must be between 0 and 9");
-	    		return;
-	    	}
-	    	
-	    	MoveRequest request = new MoveRequest(xCord, yCord, m_UserData.getUserID(), m_GameID,
-	    									m_UserData.getUUID(), getText(R.string.makeMoveEndPoint).toString() );
-	    	SendMoveTask task = new SendMoveTask();
-	    	task.execute(request);
-    	}
-    	catch (Exception ex){    		
-    		//TODO: Add logging
-    		displayError("Enter X&Y Values");
-    	}
-    }
-    
-    void displayError(String message){
-        View v= findViewById(R.id.textViewStatus);
-        TextView txtVw = (TextView)v;
-        txtVw.setText(message);
-    }
-    
     /**
      * An overloaded method.
      * This method updates the status label with whatever the game status is. 
@@ -116,35 +119,31 @@ public class GameActivity extends Activity {
      * @param lastMoveBy LastMoveBy is used to determine whether or not to enable the fire button.
      */
     void adjustGameStatus(GameStatus status, int lastMoveBy){
-        View v= findViewById(R.id.textViewStatus);
-        TextView txtVw = (TextView)v;
-        String label = new String(); //stores the text to update the status label with
-        Button b;
+       
+    	playersTurn = false;
+    	
     	switch (status){
     	case Finished:
-    		label = "Game Over!";
-    		b = (Button)findViewById(R.id.btnFire);
-			b.setEnabled(false);
+    		viewGameBoard.setStatusMessage("Game Over!");
     		break;
     	case InProgress:
     		if (lastMoveBy == m_UserData.getUserID()){
-    			label = "Awaiting Opponent Move";
-    			b = (Button)findViewById(R.id.btnFire);
-    			b.setEnabled(false);
+    			if (m_GameInformation == null)
+    				viewGameBoard.setStatusMessage("Awaiting Opponents's Move!");
+    			else
+    				viewGameBoard.setStatusMessage("Awaiting "+m_GameInformation.GetOpponentUserName()+"'s Move!");
     		}
     		else{
-    			label = "Awaiting Your Move!";
-    			b = (Button)findViewById(R.id.btnFire);
-    			b.setEnabled(true);
+    			viewGameBoard.setStatusMessage("Awaiting Your Move!");
+    			playersTurn = true;
     		}
     		break;
     	case Pending:
-    		label = "Waiting for Opponent.";
-    		b = (Button)findViewById(R.id.btnFire);
-    		b.setEnabled(false);
+    		viewGameBoard.setStatusMessage("Waiting for Opponent...");
     		break;
-    	}    	
-    	txtVw.setText(label);
+    	}
+    	
+    	viewGameBoard.invalidate();
     }
     
     /**
@@ -154,60 +153,61 @@ public class GameActivity extends Activity {
      * @param xCord
      * @param yCord
      */
+    /*
     void adjustGameStatus(MoveResult r, int xCord, int yCord, GameStatus gameStatus){
-        View v= findViewById(R.id.textViewStatus);
-        TextView txtVw = (TextView)v;
-        String label = new String(); //stores the text to update the status label with
         
         //If the game is over, set the label to game over.
         if (gameStatus == GameStatus.Finished){
-        	label = "Game Over!";
+        	viewGameBoard.setStatusMessage("GAME OVER!");
         }
         else{//otherwise, draw the game result.
 		    switch (r){
 		    case Hit:
-		    	label = "Hit!";
+		    	viewGameBoard.setStatusMessage("HIT!");
 		    	break;
 		    case Miss:
-		    	label = "Miss!";
+		    	viewGameBoard.setStatusMessage("MISS!");
 		    	break;
 		    }
-        }
-        txtVw.setText(label);
+        }        
+        viewGameBoard.invalidate();
     }   
+    */
     
-    void buildBoard(){
-       DrawBoardTask task = new	DrawBoardTask();
+    void updateBoard() {
+       final DrawBoardTask task = new DrawBoardTask();
        task.execute(m_UserData);
     }
     
-    String generateBoardString(CellState[][] board, Boolean isUserBoard){
-    	StringBuilder sb = new StringBuilder();
-    	for (int i =0; i < board.length; i++){
-    		for (int j = 0; j< board[i].length;j++){
-    			switch (board[i][j]){
-    			case DamagedShip:
-    				sb.append("H");
-    				break;
-    			case Empty:
-    				sb.append("_");
-    				break;
-    			case Ship:
-    				if (isUserBoard)
-    					sb.append("X");
-    				else sb.append("_");
-    				break;
-    			case Miss:
-    				sb.append("M");
+    private class GameInformationTask extends AsyncTask<UserData, Void, ArrayList<GameInformation>> {
+    	@Override
+    	protected ArrayList<GameInformation> doInBackground(UserData... params) {
+    		try {
+    			if (params.length >0){
+    				UserData d = params[0];
+    				GameListRequest rq = new GameListRequest(d.getUserID(), d.getUUID(), getText(com.fightfleet.fightfleetclient.R.string.getGameListEndPoint).toString());
+    				GameListResponse response = m_ServiceInterface.requestGameList(rq);
+    				return response.getGameInformation();
     			}
-    			if (j == board[i].length-1){
-    				sb.append("\n");
-    			}
-    			else sb.append(" ");
+    			else return new ArrayList<GameInformation>();
+    		} catch (Exception e) {
+    			return new ArrayList<GameInformation>();
     		}
     	}
-    	
-    	return sb.toString();
+
+    	@Override
+    	protected void onPostExecute(ArrayList<GameInformation> result){
+    		try	{
+    			for (GameInformation g : result) {
+    				if (g.GetGameID() == m_GameID)
+    					m_GameInformation = g;
+    			} 			
+    			viewGameBoard.setNameOpponent(m_GameInformation.GetOpponentUserName());
+    		}
+    		catch (Exception ex){
+    			System.out.print(ex.getMessage());
+    		}
+    	}
     }
     
     private class DrawBoardTask extends AsyncTask<UserData, Void, GameDataResponse> {
@@ -225,23 +225,36 @@ public class GameActivity extends Activity {
     	
     	@Override
     	protected void onPostExecute(GameDataResponse result){
-        	try	{
-	           	 String userBoard = generateBoardString(result.getUserBoardData(), true);
-	        	 String opponentBoard = generateBoardString(result.getOpponentBoardData(), false);
-	        	 
-	     	     View v= findViewById(R.id.textViewUserWater);
-	             TextView txtVw = (TextView)v;
-	             txtVw.setText(userBoard);
-	            
-	    	     v= findViewById(R.id.textViewOpponentWater);
-	             txtVw = (TextView)v;
-	             txtVw.setText(opponentBoard);
-	             
-	             
-	             adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());
+        	try	{  		
+        		/*
+        		 * Update game board
+        		 */
+
+        		// player
+        		if (viewGameBoard.getBoardPlayer() == null)
+					viewGameBoard.setBoardPlayer(result.getUserBoardData());
+
+				if (!generateCellStateString(viewGameBoard.getBoardPlayer())
+					.equals(generateCellStateString(result.getUserBoardData()))) {
+					viewGameBoard.setBoardPlayerOld(viewGameBoard.getBoardPlayer());			
+					viewGameBoard.setBoardPlayer(result.getUserBoardData());
+				}
+
+				// opponent
+				if (viewGameBoard.getBoardOpponent() == null)
+					viewGameBoard.setBoardOpponent(result.getOpponentBoardData());
+					
+				if (!generateCellStateString(viewGameBoard.getBoardOpponent())
+						.equals(generateCellStateString(result.getOpponentBoardData()))) {
+						viewGameBoard.setBoardOpponentOld(viewGameBoard.getBoardOpponent());			
+						viewGameBoard.setBoardOpponent(result.getOpponentBoardData());
+					}
+				
+        		adjustGameStatus(result.getGameStatus(), result.getLastMoveBy());
         	}
         	catch (Exception ex){
-        		System.out.println("Broken");
+        		System.out.println("DrawBoardTask - Broken");     		
+        		System.out.println(StackTraceToString(ex));
         	}
     	}
      }
@@ -262,17 +275,99 @@ public class GameActivity extends Activity {
 	    	@Override
 	    	protected void onPostExecute(MoveResponse result){
 	        	try	{
-	        		 int xCord = result.getXCord();
-	        		 int yCord = result.getYCord();
-	        		 
-	        		 MoveResult moveResult = result.getMoveResult();
-	        		 GameStatus gameStatus =  result.getGameStatus();
-	        		     		        	 
-	        		 adjustGameStatus(moveResult, xCord, yCord, gameStatus);
+	        		updateBoard();
 	        	}
 	        	catch (Exception ex){
-	        		System.out.println("Broken");
+	        		System.out.println("SendMoveTask - Broken");
 	        	}
 	    	}
 	 }
+
+	public boolean onGameBoardClick(final View view, int x, int y) {
+		System.out.println("onGameBoardClick: x: "+x+", y: "+y);		
+
+		xCord = x;
+		yCord = y;
+		
+		if (!playersTurn) return false;
+		
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int which) {
+		        switch (which){
+		        case DialogInterface.BUTTON_POSITIVE:
+		        	try {
+		    	    	MoveRequest request = new MoveRequest(yCord, xCord, m_UserData.getUserID(), m_GameID, m_UserData.getUUID(),
+		    	    			                              getText(R.string.makeMoveEndPoint).toString() );
+		    	    	SendMoveTask task = new SendMoveTask();
+		    	    	task.execute(request);
+		        	}
+		        	catch (Exception ex){    		
+		        		//TODO: Add logging
+		        	}
+		        	break;
+		        case DialogInterface.BUTTON_NEGATIVE:
+		        	break;
+		        }
+		    }
+		};
+
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Target Locked!").setMessage("Coordinates (x, y): "+x+", "+y+"")
+		.setNegativeButton("Cancel", dialogClickListener).setPositiveButton("Fire!", dialogClickListener).show();
+
+		return true;
+	}
+	
+	// poll server
+	Runnable m_statusChecker = new Runnable() {
+	     public void run() {
+	          updateBoard();
+	          m_handler.postDelayed(m_statusChecker, m_interval);
+	     }
+	};
+	
+	void startPollingServer() {
+	    m_statusChecker.run(); 
+	}
+
+	void stopPollingServer() {
+	    m_handler.removeCallbacks(m_statusChecker);
+	}
+	
+	String generateCellStateString(CellState[][] board) {
+    	StringBuilder sb = new StringBuilder();
+    	for (int i = 0; i < board.length; i++) {
+    		for (int j = 0; j < board[i].length; j++) {
+    			switch (board[i][j]) {
+    			case DamagedShip:
+    				sb.append("H");
+    				break;
+    			case Empty:
+    				sb.append("_");
+    				break;
+    			case Ship:
+    				sb.append("X");
+    				break;
+    			case Miss:
+    				sb.append("M");
+    			}
+    			if (j == board[i].length - 1) {
+    				sb.append("\n");
+    			} else
+    				sb.append(" ");
+    		}
+    	}
+
+    	return sb.toString();
+    }
+	
+	// For debugging purposes
+    public static String StackTraceToString(Exception ex) {
+    	String result = ex.toString() + "\n";
+    	StackTraceElement[] trace = ex.getStackTrace();
+    	for (int i = 0; i < trace.length; i++) {
+    		result += trace[i].toString() + "\n";
+    	}
+    	return result;
+    }
 }

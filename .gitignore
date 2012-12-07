@@ -1,10 +1,13 @@
 #ignore .orig files
 *.orig
+
 #ignore weird Mac OSX files
 *.DS_Store
 .DS_Store
+
 #ignore thumbnails created by windows
 Thumbs.db
+
 #Ignore files build by Visual Studio
 *.obj
 *.exe
@@ -34,3 +37,17 @@ _ReSharper*/
 *.suo
 *.user
 *.tmbundle
+
+#Ignore files for android / eclipse
+# built application files
+*.apk
+*.ap_
+# files for the dex VM
+*.dex
+# Java class files
+*.class
+# generated files
+bin/
+gen/
+# Local configuration file (sdk path, etc)
+local.properties
