@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.fightfleet.fightfleetclient.R;
 import com.fightfleet.fightfleetclient.Domain.CreateGameRequest;
 import com.fightfleet.fightfleetclient.Domain.DefaultServiceInterface;
 import com.fightfleet.fightfleetclient.Domain.GameDataResponse;
@@ -26,10 +25,10 @@ import com.fightfleet.fightfleetclient.Lib.GameStatus;
 import com.fightfleet.fightfleetclient.Lib.UserData;
 
 public class GameListActivity extends Activity {
-
 	UserData m_UserData;
 	ArrayList<GameInformation> m_GameInformation;
 	ServiceInterface m_ServiceInterface = new DefaultServiceInterface();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,8 +106,7 @@ public class GameListActivity extends Activity {
         	}
     	}
     }
-    
-    
+       
     private class GameInformationTask extends AsyncTask<UserData, Void, ArrayList<GameInformation>> {
     	@Override
     	protected ArrayList<GameInformation> doInBackground(UserData... params) {
@@ -152,7 +150,4 @@ public class GameListActivity extends Activity {
         	}
     	}
     }
-    
-
-
 }
