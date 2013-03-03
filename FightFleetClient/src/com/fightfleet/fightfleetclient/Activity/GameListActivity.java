@@ -144,8 +144,7 @@ public class GameListActivity extends Activity {
                     }
                 });
         	}
-        	catch (Exception ex){
-        		
+        	catch (Exception ex){ 
         		System.out.print(ex.getMessage());
         	}
     	}

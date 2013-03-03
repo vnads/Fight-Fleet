@@ -77,7 +77,7 @@ public class LoginActivity extends Activity {
 	    			CreateUserTask createUserTask = new CreateUserTask();
 	    			createUserTask.execute(m_UserData);
 	    		}
-	    		else SetStatus("Invalid Entries");
+	    		else setStatus("Invalid Entries");
 	    	}
 	    	else{
 	    		if (!email.equals("") && !password.equals("")){
@@ -86,16 +86,16 @@ public class LoginActivity extends Activity {
 			    	loginTask.execute(m_UserData);
 	    		}
 	    		else{
-	    			SetStatus("Enter a username and password.");
+	    			setStatus("Enter a username and password.");
 	    		}
 	    	}
     	}
     	catch (Exception ex){
-    		SetStatus("Login Failed.");
+    		setStatus("Login Failed.");
     	}
     }
     
-    void SetStatus(String status){
+    void setStatus(String status){
     	 TextView statusTextView = (TextView)this.findViewById(R.id.textViewStatus);
     	 statusTextView.setText(status);
     }
@@ -120,18 +120,22 @@ public class LoginActivity extends Activity {
     	protected void onPostExecute(UserData result){
         	try	{
         		m_UserData = result;
-        		Intent intent = new Intent(LoginActivity.this, GameListActivity.class);
-        		intent.putExtra("UserData", m_UserData);	        		
-        		//this is a horribly insecure way of saving credentials.
-	    	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-	    	    SharedPreferences.Editor editor = settings.edit();
-	            editor.putString("username", result.getUserName());
-	            editor.putString("password", result.getPassword());
-	    	    editor.commit();	        	              	     
-        		startActivity(intent);
+        		if (m_UserData.getUserID() >= 0){
+	        		Intent intent = new Intent(LoginActivity.this, GameListActivity.class);
+	        		intent.putExtra("UserData", m_UserData);	        		
+	        		//this is a horribly insecure way of saving credentials.
+		    	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		    	    SharedPreferences.Editor editor = settings.edit();
+		            editor.putString("username", result.getUserName());
+		            editor.putString("password", result.getPassword());
+		    	    editor.commit();	        	              	     
+	        		startActivity(intent);
+        		}
+        		else
+        			setStatus("Login Failed.");
         	}
         	catch (Exception ex){
-        		SetStatus("Login Failed.");
+        		setStatus("Login Failed.");
         	}
     	}
     }
@@ -148,7 +152,7 @@ public class LoginActivity extends Activity {
 				}
 				else return new UserData("", "", -1, null);
 			} catch (Exception e) {
-				SetStatus("Create User Failed.");
+				setStatus("Create User Failed.");
 				return new UserData("", "", -1, null);
 			}
     	}
@@ -157,18 +161,23 @@ public class LoginActivity extends Activity {
     	protected void onPostExecute(UserData result){
         	try	{
         		m_UserData = result;
-        		Intent intent = new Intent(LoginActivity.this, GameListActivity.class);
-        		intent.putExtra("UserData", m_UserData);	        		
-        		//this is a horribly insecure way of saving credentials.
-	    	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-	    	    SharedPreferences.Editor editor = settings.edit();
-	            editor.putString("username", result.getUserName());
-	            editor.putString("password", result.getPassword());
-	    	    editor.commit();	        	              	     
-        		startActivity(intent);
+        		if (m_UserData.getUserID() >=0){
+	        		Intent intent = new Intent(LoginActivity.this, GameListActivity.class);
+	        		intent.putExtra("UserData", m_UserData);	        		
+	        		//this is a horribly insecure way of saving credentials.
+		    	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		    	    SharedPreferences.Editor editor = settings.edit();
+		            editor.putString("username", result.getUserName());
+		            editor.putString("password", result.getPassword());
+		    	    editor.commit();	        	              	     
+	        		startActivity(intent);
+        		}
+        		else{
+        			setStatus("Create User Failed.");        			
+        		}
         	}
         	catch (Exception ex){
-        		SetStatus("Create User Failed.");        		
+        		setStatus("Create User Failed.");        		
         	}
     	}
     }
